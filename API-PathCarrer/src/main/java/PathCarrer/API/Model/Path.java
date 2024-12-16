@@ -32,8 +32,9 @@ public class Path {
 
     private List<comments> forum;
 
-    @Field("modulosAAA")
-    private List<MODULOSX> modulos = new ArrayList<>();
+
+
+    private List<MODULOSX> modulosxes;
 
     public Path(PathDTO JSON) {
         this.id = JSON.id();
@@ -42,25 +43,23 @@ public class Path {
         this.description = JSON.description();
         this.adjectives = JSON.adjectives();
 
-        System.out.println(JSON.modulos().get(0));
-        System.out.println(JSON.modulos().get(1));
-        System.out.println(JSON.modulos().get(1).modulosN().get(0));
-        System.out.println(JSON.modulos().get(1).modulosN().get(1));
-
-        fillset(this.modulos,JSON.modulos());
-    }
-
-    private void fillset (List<MODULOSX> List, List<MODULO2DTO> JSON){
-        for (int i = 0; i < 2; i++) {
-            for (int y = 0; i < 2; y++) {
-                this.modulos.add(new MODULOSX(JSON.get(i).modulosN()));
-            }
+        this.modulosxes = new ArrayList<>();
 
 
+        if (JSON.modulos() != null) {
+            fillset(modulosxes, JSON.modulos());
+        } else {
+            System.out.println("A lista modulos está vazia!");
         }
-
-
     }
+
+    private void fillset(List<MODULOSX> List, List<MODULO2DTO> JSON) {
+        for (int i = 0; i < 2; i++) {
+            List.add(new MODULOSX(JSON.get(i).modulosN()));
+            System.out.println("GPT");
+        }
+    }
+
 
 }
 

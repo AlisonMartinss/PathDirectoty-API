@@ -9,17 +9,24 @@ public class MODULOSX {
 
     public MODULOSX(List<AulasDTO> modulosA) {
         this.modulosH = new ArrayList<>();
-        fillset(2,modulosA,modulosH);
+        fillset(3,modulosA,modulosH);
     }
 
 
 
-   private List<Aulas> fillset (int n, List<AulasDTO> JSON, List<Aulas> List){
-        for (int i = 0; i < n;i++){
-            List.add(new Aulas(JSON.get(i)));
-        }
+//   private void fillset (int n, List<AulasDTO> JSON, List<Aulas> List){
+//        for (int i = 1; i < n;i++){
+//            List.add(new Aulas(JSON.get(i)));
+//        }
+//    }
 
-        return List;}
+    private void fillset(int n, List<AulasDTO> JSON, List<Aulas> List) {
+        for (int i = 1; i < Math.min(n, JSON.size()); i++) { // Garante que o loop não exceda JSON.size()
+            List.add(new Aulas(JSON.get(i)));
+            System.out.println("GPT");
+        }
+    }
+
 
 
 }
