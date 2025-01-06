@@ -1,16 +1,15 @@
 package PathCarrer.API.Model;
-import PathCarrer.API.DTO.MODULO2DTO;
+import PathCarrer.API.DTO.moduloDTO;
 import PathCarrer.API.DTO.PathDTO;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.ArrayList;
 import java.util.List;
 
-//TESTANTO
+
 
 @Document(collection = "Testagem1312")
 @Getter
@@ -18,6 +17,7 @@ import java.util.List;
 public class Path {
     @Id
     private String id;
+
     private  String categorys;
 
     private String subcategorys;
@@ -32,9 +32,7 @@ public class Path {
 
     private List<comments> forum;
 
-
-
-    private List<MODULOSX> modulosxes;
+    private List<modulo> modulos; // Esta lista está para 'modulos'. E 'modulo' está para 'modulosN'
 
     public Path(PathDTO JSON) {
         this.id = JSON.id();
@@ -42,21 +40,19 @@ public class Path {
         this.subcategorys = JSON.subcategorys();
         this.description = JSON.description();
         this.adjectives = JSON.adjectives();
-
-        this.modulosxes = new ArrayList<>();
+        this.modulos = new ArrayList<>();
 
 
         if (JSON.modulos() != null) {
-            fillset(modulosxes, JSON.modulos());
+            fillSet(modulos, JSON.modulos());
         } else {
             System.out.println("A lista modulos está vazia!");
         }
     }
 
-    private void fillset(List<MODULOSX> List, List<MODULO2DTO> JSON) {
-        for (int i = 0; i < 2; i++) {
-            List.add(new MODULOSX(JSON.get(i).modulosN()));
-            System.out.println("GPT");
+    private void fillSet(List<modulo> List, List<moduloDTO> JSON) {
+        for (int i = 0; i < (JSON.size()); i++) {
+            List.add(new modulo(JSON.get(i).name(),JSON.get(i).description(),JSON.get(i).modulosN()));
         }
     }
 

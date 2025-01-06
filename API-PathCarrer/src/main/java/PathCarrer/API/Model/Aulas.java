@@ -1,7 +1,6 @@
 package PathCarrer.API.Model;
 
 import PathCarrer.API.DTO.AulasDTO;
-import PathCarrer.API.DTO.moduloDTO;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 
