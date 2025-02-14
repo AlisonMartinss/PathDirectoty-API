@@ -5,5 +5,5 @@ import PathCarrer.API.DTO.CreatePathStep.threePath;
 import java.util.List;
 
 
-public record PathDTO(onePath onePathDTO, twoPath twoPathDTO,List<threePath> threePathsDTO){}
+public record PathDTO(onePath onePathDTO, twoPath twoPathDTO){}
 

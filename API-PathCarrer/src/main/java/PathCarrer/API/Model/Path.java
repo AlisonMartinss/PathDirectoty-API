@@ -34,21 +34,59 @@ public class Path {
 
     private List <comments> comments;
 
-    private List<comments> forum;
+    private List <comments> forum;
+
+    @Override
+    public String toString() {
+        return "Path{" +
+                "title='" + title + '\'' +
+                ", category='" + category + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 
     public Path(PathDTO JSON) {
         this.title = JSON.onePathDTO().title();
         this.category = JSON.onePathDTO().category();
         this.description = JSON.onePathDTO().descPathOver();
+        this.tags = new ArrayList<>();
         this.adjectivesElements = new ArrayList<>();
         this.comments = new ArrayList<>();
         this.forum = new ArrayList<>();
         this.modulos = new ArrayList<>();
 
-        fillSetTags(JSON.onePathDTO(), tags);
-        fillSetAdjectives(JSON.onePathDTO().adjetives(), adjectivesElements);
-        fillSetModulo(JSON.twoPathDTO(), modulos);
 
+        if (JSON.onePathDTO().tags().size() != 0){
+            fillSetTags(JSON.onePathDTO().tags(), tags);
+        }
+
+        else {
+            System.out.println("Lista de tags vazia");
+        }
+
+        if (JSON.onePathDTO().adjetives().size() != 0){
+            fillSetAdjectives(JSON.onePathDTO().adjetives(), adjectivesElements);
+        }
+
+        else {
+            System.out.println("Lista de adjetivos vazia");
+        }
+
+
+        if (JSON.twoPathDTO().ClassList().size() != 0){
+            modulos.add(new modulo(JSON.twoPathDTO()));
+        }
+
+        else {
+            System.out.println("Lista de aulas vazia");
+        }
+
+    }
+
+    private void fillSetTags(List<String> JSON, List<String> tagsList) {
+        for (int i = 0; i < JSON.size(); i++) {
+            tagsList.add(JSON.get(i));
+        }
     }
 
     private void fillSetAdjectives(List<String> JSON, List<adjectives> List) {
@@ -63,11 +101,7 @@ public class Path {
         }
     }
 
-    private void fillSetTags(onePath JSON, List<String> tagsList) {
-        for (int i = 0; i < tags.size(); i++) {
-            tagsList.add(JSON.tags().get(i));
-        }
-    }
+
 
 
 }
