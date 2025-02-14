@@ -1,4 +1,5 @@
 package PathCarrer.API.Model;
+import PathCarrer.API.DTO.CreatePathStep.onePath;
 import PathCarrer.API.DTO.moduloDTO;
 import PathCarrer.API.DTO.PathDTO;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import PathCarrer.API.DTO.CreatePathStep.twoPath;
 
 
 
@@ -18,41 +20,52 @@ public class Path {
     @Id
     private String id;
 
-    private  String categorys;
+    private  String title;
 
-    private String subcategorys;
+    private  String category;
 
     private  String description;
 
-    private List<String> adjectives;
+    private List<String> tags;
 
-    private List<Integer> scores;
+    private List<adjectives> adjectivesElements;
+
+    private List<modulo> modulos;
 
     private List <comments> comments;
 
     private List<comments> forum;
 
-    private List<modulo> modulos; // Esta lista está para 'modulos'. E 'modulo' está para 'modulosN'
-
     public Path(PathDTO JSON) {
-        this.id = JSON.id();
-        this.categorys = JSON.categorys();
-        this.subcategorys = JSON.subcategorys();
-        this.description = JSON.description();
-        this.adjectives = JSON.adjectives();
+        this.title = JSON.onePathDTO().title();
+        this.category = JSON.onePathDTO().category();
+        this.description = JSON.onePathDTO().descPathOver();
+        this.adjectivesElements = new ArrayList<>();
+        this.comments = new ArrayList<>();
+        this.forum = new ArrayList<>();
         this.modulos = new ArrayList<>();
 
+        fillSetTags(JSON.onePathDTO(), tags);
+        fillSetAdjectives(JSON.onePathDTO().adjetives(), adjectivesElements);
+        fillSetModulo(JSON.twoPathDTO(), modulos);
 
-        if (JSON.modulos() != null) {
-            fillSet(modulos, JSON.modulos());
-        } else {
-            System.out.println("A lista modulos está vazia!");
+    }
+
+    private void fillSetAdjectives(List<String> JSON, List<adjectives> List) {
+        for (int i = 0; i < (JSON.size()); i++) {
+            List.add(new adjectives(JSON.get(i)));
         }
     }
 
-    private void fillSet(List<modulo> List, List<moduloDTO> JSON) {
-        for (int i = 0; i < (JSON.size()); i++) {
-            List.add(new modulo(JSON.get(i).name(),JSON.get(i).description(),JSON.get(i).modulosN()));
+    private void fillSetModulo(twoPath JSON, List<modulo> List) {
+        for (int i = 0; i < 1; i++) {
+            List.add(new modulo(JSON));
+        }
+    }
+
+    private void fillSetTags(onePath JSON, List<String> tagsList) {
+        for (int i = 0; i < tags.size(); i++) {
+            tagsList.add(JSON.tags().get(i));
         }
     }
 

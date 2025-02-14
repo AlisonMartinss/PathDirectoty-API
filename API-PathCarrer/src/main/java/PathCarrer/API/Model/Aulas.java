@@ -1,30 +1,20 @@
 package PathCarrer.API.Model;
 
-import PathCarrer.API.DTO.AulasDTO;
+
 import org.springframework.data.mongodb.core.mapping.Field;
+import PathCarrer.API.DTO.CreatePathStep.threePath;
 
 
 public class Aulas {
-    @Field("title")
-    private String title;
 
-    @Field("description")
+    private String title;
     private String description;
-    @Field("link")
     private String link;
 
-    public Aulas(AulasDTO JSON) {
+    public Aulas(threePath JSON) {
         this.title = JSON.title();
         this.description = JSON.description();
         this.link = JSON.link();
     }
 
-    @Override
-    public String toString() {
-        return "Aulas{" +
-                "title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", link='" + link + '\'' +
-                '}';
-    }
 }

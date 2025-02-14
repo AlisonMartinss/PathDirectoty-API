@@ -1,6 +1,7 @@
 package PathCarrer.API.Model;
 
-import PathCarrer.API.DTO.AulasDTO;
+import PathCarrer.API.DTO.CreatePathStep.threePath;
+import PathCarrer.API.DTO.CreatePathStep.twoPath;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,18 +11,17 @@ public class modulo {
     private String description;
 
 
-    public modulo(String name, String description, List<AulasDTO> modulosA) {
+    public modulo(twoPath JSON) {
         this.modulocontent = new ArrayList<>();
-        this.name = name;
-        this.description = description;
-        fillSet(modulosA, modulocontent);
+        this.name = JSON.title();
+        this.description = JSON.desc();
+        fillSet(JSON.ClassList(), modulocontent);
     }
 
 
-    private void fillSet(List<AulasDTO> JSON, List<Aulas> List) {
-        for (int i = 0; i < JSON.size(); i++) {
-            List.add(new Aulas(JSON.get(i)));
-            System.out.println("GPT");
+    private void fillSet(List<threePath> ClassListJSON, List<Aulas> List) {
+        for (int i = 0; i < ClassListJSON.size(); i++) {
+            List.add(new Aulas(ClassListJSON.get(i)));
         }
     }
 
