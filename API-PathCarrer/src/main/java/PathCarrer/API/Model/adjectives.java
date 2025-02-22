@@ -4,8 +4,8 @@ public class adjectives {
     private String name;
     private String score;
 
-    public adjectives (String JSON){
-        this.name = JSON;
+    public adjectives (String name){
+        this.name = name;
         this.score = null;
     }
 

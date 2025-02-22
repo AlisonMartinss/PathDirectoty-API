@@ -1,20 +1,27 @@
 package PathCarrer.API.Model;
 
 
-import org.springframework.data.mongodb.core.mapping.Field;
-import PathCarrer.API.DTO.CreatePathStep.threePath;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 
+@NoArgsConstructor  // Adicione essa anotação do Lombok
+@Getter
+@Setter
 public class Aulas {
 
     private String title;
     private String description;
     private String link;
 
-    public Aulas(threePath JSON) {
-        this.title = JSON.title();
-        this.description = JSON.description();
-        this.link = JSON.link();
+    @PersistenceConstructor
+    public Aulas(String title, String description, String link) {
+        this.title = title;
+        this.description = description;
+        this.link = link;
     }
 
 }

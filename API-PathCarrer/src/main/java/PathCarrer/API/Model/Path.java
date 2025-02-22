@@ -1,21 +1,22 @@
 package PathCarrer.API.Model;
-import PathCarrer.API.DTO.CreatePathStep.onePath;
-import PathCarrer.API.DTO.moduloDTO;
 import PathCarrer.API.DTO.PathDTO;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.util.ArrayList;
 import java.util.List;
-import PathCarrer.API.DTO.CreatePathStep.twoPath;
+
 
 
 
 @Document(collection = "Testagem1312")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Path {
     @Id
     private String id;
@@ -26,6 +27,8 @@ public class Path {
 
     private  String description;
 
+    private int nClass;
+
     private List<String> tags;
 
     private List<adjectives> adjectivesElements;
@@ -35,15 +38,6 @@ public class Path {
     private List <comments> comments;
 
     private List <comments> forum;
-
-    @Override
-    public String toString() {
-        return "Path{" +
-                "title='" + title + '\'' +
-                ", category='" + category + '\'' +
-                ", description='" + description + '\'' +
-                '}';
-    }
 
     public Path(PathDTO JSON) {
         this.title = JSON.onePathDTO().title();
@@ -56,7 +50,7 @@ public class Path {
         this.modulos = new ArrayList<>();
 
 
-        if (JSON.onePathDTO().tags().size() != 0){
+        if (!JSON.onePathDTO().tags().isEmpty()){
             fillSetTags(JSON.onePathDTO().tags(), tags);
         }
 
@@ -64,7 +58,7 @@ public class Path {
             System.out.println("Lista de tags vazia");
         }
 
-        if (JSON.onePathDTO().adjetives().size() != 0){
+        if (!JSON.onePathDTO().adjetives().isEmpty()){
             fillSetAdjectives(JSON.onePathDTO().adjetives(), adjectivesElements);
         }
 
@@ -73,10 +67,10 @@ public class Path {
         }
 
 
-        if (JSON.twoPathDTO().ClassList().size() != 0){
-            modulos.add(new modulo(JSON.twoPathDTO()));
+        if (!JSON.twoPathDTO().ClassList().isEmpty()){
+            var novo = new modulo(JSON.twoPathDTO().title(),JSON.twoPathDTO().desc(),JSON.twoPathDTO().ClassList());
+            modulos.add(novo);
         }
-
         else {
             System.out.println("Lista de aulas vazia");
         }
@@ -95,11 +89,7 @@ public class Path {
         }
     }
 
-    private void fillSetModulo(twoPath JSON, List<modulo> List) {
-        for (int i = 0; i < 1; i++) {
-            List.add(new modulo(JSON));
-        }
-    }
+
 
 
 
