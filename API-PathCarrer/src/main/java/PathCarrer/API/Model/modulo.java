@@ -1,23 +1,54 @@
 package PathCarrer.API.Model;
 
 import PathCarrer.API.DTO.CreatePathStep.threePath;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-@Getter
-@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class modulo {
     private List<Aulas> modulocontent; //modulosN
     private String name;
     private String description;
     private int qtdAulasModulo;
+
+    public List<Aulas> getModulocontent() {
+        return modulocontent;
+    }
+
+    public void setModulocontent(List<Aulas> modulocontent) {
+        this.modulocontent = modulocontent;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getQtdAulasModulo() {
+        return qtdAulasModulo;
+    }
+
+    public void setQtdAulasModulo(int qtdAulasModulo) {
+        this.qtdAulasModulo = qtdAulasModulo;
+    }
+
     @PersistenceConstructor
     public modulo(String name, String  description, List<threePath> modulocontent) {
         this.modulocontent = new ArrayList<>();
