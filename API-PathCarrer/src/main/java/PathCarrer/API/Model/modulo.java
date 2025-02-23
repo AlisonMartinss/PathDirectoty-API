@@ -2,7 +2,6 @@ package PathCarrer.API.Model;
 
 import PathCarrer.API.DTO.CreatePathStep.threePath;
 import lombok.*;
-import org.springframework.data.annotation.PersistenceConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +11,31 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class modulo {
-    private List<Aulas> modulocontent; //modulosN
+    private List<Aulas> modulocontent;
     private String name;
     private String description;
     private int qtdAulasModulo;
+
+    public void AddNewModulo(String name, String  description, List<threePath> modulocontent) {
+        this.modulocontent = new ArrayList<>();
+        this.name = name;
+        this.description = description;
+        this.qtdAulasModulo = fillSet(modulocontent,this.modulocontent);
+
+    }
+
+    private int fillSet(List<threePath> ClassListJSON, List<Aulas> List) {
+        for (int i = 0; i < ClassListJSON.size(); i++) {
+            var ClassNew = new Aulas();
+            ClassNew.ClassCreate(ClassListJSON.get(i).title(),ClassListJSON.get(i).description(),ClassListJSON.get(i).link());
+            List.add(ClassNew);
+            qtdAulasModulo++;
+        }
+
+        return this.qtdAulasModulo;
+    }
+
+    //* ===== Getters & Setters ====== *//
 
     public List<Aulas> getModulocontent() {
         return modulocontent;
@@ -48,24 +68,4 @@ public class modulo {
     public void setQtdAulasModulo(int qtdAulasModulo) {
         this.qtdAulasModulo = qtdAulasModulo;
     }
-
-    @PersistenceConstructor
-    public modulo(String name, String  description, List<threePath> modulocontent) {
-        this.modulocontent = new ArrayList<>();
-        this.name = name;
-        this.description = description;
-
-    }
-
-    private int fillSet(List<threePath> ClassListJSON, List<Aulas> List) {
-        for (int i = 0; i < ClassListJSON.size(); i++) {
-            List.add(new Aulas(ClassListJSON.get(i).title(),ClassListJSON.get(i).description(),ClassListJSON.get(i).link()));
-            qtdAulasModulo++;
-        }
-
-        return this.qtdAulasModulo;
-    }
-
-
-
 }
