@@ -2,6 +2,7 @@ package PathCarrer.API.Model;
 
 import PathCarrer.API.DTO.PathDTO;
 import PathCarrer.API.DTO.Update.ModuloUpdateDTO;
+import PathCarrer.API.DTO.Update.PathUpdate;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -19,6 +20,8 @@ import java.util.List;
 public class Path {
     @Id
     private String id;
+
+    private String idAuthor;
 
     private  String title;
 
@@ -96,6 +99,13 @@ public class Path {
             modulos.add(novo);
     }
 
+    public void UpdateModuloStats (PathUpdate path){
+        this.title = path.onePathDTO().title();
+        this.category = path.onePathDTO().category();
+        this.description = path.onePathDTO().descPathOver();
+        fillSetTags(path.onePathDTO().tags(),this.tags);
+        fillSetAdjectives(path.onePathDTO().adjetives(),this.adjectivesElements);
+    }
 
 
     //* ===== Getters & Setters ====== *//
