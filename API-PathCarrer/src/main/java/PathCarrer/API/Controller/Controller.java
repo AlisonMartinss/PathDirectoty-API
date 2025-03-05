@@ -16,12 +16,10 @@ public class Controller {
     @Autowired
     private authorPath authorPath;
 
-
     @GetMapping
     public String helloWord (){
         return "Hello Word ";
     }
-
 
     @PostMapping("/PathCreate")
     @Transactional
@@ -29,16 +27,23 @@ public class Controller {
         authorPath.PathCreate(path);
         return ResponseEntity.noContent().build();
     }
-
+    @PutMapping("/PathUpdate")
     @Transactional
-    @PutMapping("/pathUpdate")
     public ResponseEntity pathUpdate(@RequestBody PathUpdate pathUpdate){
         authorPath.pathUpdate(pathUpdate);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/PathDelete")
+    @Transactional
+    public ResponseEntity pathDelete(@RequestBody PathUpdate pathUpdate){
+        authorPath.pathDelete(pathUpdate);
         return ResponseEntity.noContent().build();
     }
     @Transactional
     @PostMapping("/UpadateNewModule")
     public ResponseEntity pathUpadateNewModule(@RequestBody ModuloUpdateDTO pathUpdate){
+        System.out.println("New moduile");
         authorPath.UpadateNewModule(pathUpdate);
         return ResponseEntity.noContent().build();
     }
@@ -61,6 +66,13 @@ public class Controller {
     @PutMapping("/UpdateClassUnic")
     public ResponseEntity UpdateClassUnic (@RequestBody ClassUpdate classUpdate){
         authorPath.UpdateClassUnic(classUpdate);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Transactional
+    @PostMapping("/UpdateNewClass")
+    public ResponseEntity UpdateNewClass (@RequestBody ClassUpdate classUpdate){
+        authorPath.UpdateNewClass(classUpdate);
         return ResponseEntity.noContent().build();
     }
 

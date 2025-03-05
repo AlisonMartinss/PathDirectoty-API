@@ -18,8 +18,8 @@ import java.util.Objects;
   MOTIVAÇÃO: CLASSE DESTIANADA A FAZER AS OPERAÇÕES QUE TANGEM A RELAÇÃO PATH E SEU AUTOR.
 
  - PathCreate: Criar path.
- - PathUpdate: Atualiza o Path
- - UpadateNewModule: Adiciona um novo modulo
+ - PathUpdate: Atualiza o Path.
+ - UpadateNewModule: Adiciona um novo modulo.
  - UpdateModule: Atualiza o modulo já existente.
  - UpadateNewClass: Adiciona nova aula.
  - UpdateClassUnic: Atualiza uma aula.
@@ -49,7 +49,17 @@ public class authorPath {
          pathRepositoy.save(path);
      }
 
-    public void UpadateNewModule(ModuloUpdateDTO pathUpdate){
+     public void  pathDelete (PathUpdate pathDTO){
+
+         List<Path> pathList = pathRepositoy.findPath(pathDTO.id());
+         var path = pathList.get(0);
+         path.deletePath();
+
+         pathRepositoy.save(path);
+     }
+
+
+     public void UpadateNewModule(ModuloUpdateDTO pathUpdate){
 
         List<Path> pathList = pathRepositoy.findPath(pathUpdate.id());
         var pathMain = pathList.get(0);
@@ -105,6 +115,21 @@ public class authorPath {
             }
         }
     }
+
+     public void UpdateNewClass(ClassUpdate classUpdate){
+
+         List<Path> pathList = pathRepositoy.findPath(classUpdate.id());
+         var pathMain = pathList.get(0);
+
+         for (int i = 0; i < pathMain.getModulos().size(); i++){
+             if ((Objects.equals(pathMain.getModulos().get(i).getName(), classUpdate.nameModulo()))){
+                 var newClass = new Aulas();
+                 newClass.ClassUpdate(classUpdate.threePath());
+                 pathMain.getModulos().get(i).getModulocontent().add(newClass);
+                 pathRepositoy.save(pathMain);
+             }
+         }
+     }
 
 
 

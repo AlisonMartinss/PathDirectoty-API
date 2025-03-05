@@ -21,6 +21,8 @@ public class Path {
     @Id
     private String id;
 
+    private  boolean active;
+
     private String idAuthor;
 
     private  String title;
@@ -43,6 +45,7 @@ public class Path {
 
 
     public void CreateNewPath(PathDTO JSON) {
+
         this.title = JSON.onePathDTO().title();
         this.category = JSON.onePathDTO().category();
         this.description = JSON.onePathDTO().descPathOver();
@@ -79,6 +82,8 @@ public class Path {
             System.out.println("Lista de aulas vazia");
         }
 
+        this.active = true;
+
     }
 
     private void fillSetTags(List<String> JSON, List<String> tagsList) {
@@ -105,6 +110,10 @@ public class Path {
         this.description = path.onePathDTO().descPathOver();
         fillSetTags(path.onePathDTO().tags(),this.tags);
         fillSetAdjectives(path.onePathDTO().adjetives(),this.adjectivesElements);
+    }
+
+    public  void deletePath (){
+        this.active = false;
     }
 
 
