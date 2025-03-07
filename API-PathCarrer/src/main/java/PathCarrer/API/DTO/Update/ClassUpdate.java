@@ -6,7 +6,7 @@ import PathCarrer.API.DTO.CreatePathStep.threePath;
      (a). Atualizar uma aula;
      (b). Adicionar uma nova aula;
 
-     - ID: id do path a qual contem a aula que pretendemos mudar.
+     - ID: PathID do path a qual contem a aula que pretendemos mudar.
      - nameModulo: Titulo do modulo da aula que pretendemos mudar.
      - placeClass: indice da aula que pretendemos mudar.
      - threePath: objedo contendo: titulo, link, desc;  Que farão a substituição.

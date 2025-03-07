@@ -7,10 +7,10 @@ import PathCarrer.API.DTO.CreatePathStep.onePath;
  (a). Fazer atualizações no path;
 
 
- - ID: id do path a qual pretende-se atualizar.
+ - ID: PathID do path a qual pretende-se atualizar.
  - OnePathDTO: Dados da atualização.
 
  **/
 
-public record PathUpdate(String id,onePath onePathDTO) {
+public record PathUpdate(String PathID, onePath onePathDTO) {
 }

@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -34,15 +35,15 @@ public class User implements UserDetails {
 
     private List<insignia> InsigniaStorage;
 
-    private MyPathsAdd myPaths;
+    private List<MyPathsAdd> myPaths;
 
     private List<messages> Messages;
 
-    public static Object getLogin;
 
     public User(String userName, String password) {
         this.userName = userName;
         this.password = password;
+        this.myPaths = new ArrayList<>();
     }
 
     /* ===== Getters & Setters ====== */
@@ -97,12 +98,16 @@ public class User implements UserDetails {
         InsigniaStorage = insigniaStorage;
     }
 
-    public MyPathsAdd getMyPaths() {
+    public String getUserName() {
+        return userName;
+    }
+
+    public List<MyPathsAdd> getMyPaths() {
         return myPaths;
     }
 
-    public void setMyPaths(MyPathsAdd myPaths) {
-        this.myPaths = myPaths;
+    public void AddMyPaths(MyPathsAdd newPath) {
+        this.myPaths.add(newPath);
     }
 
     public List<messages> getMessages() {
@@ -114,7 +119,6 @@ public class User implements UserDetails {
     }
 
     /* ===== UserDetails ==== */
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

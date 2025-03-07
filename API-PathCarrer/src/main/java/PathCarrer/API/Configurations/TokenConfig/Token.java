@@ -26,14 +26,14 @@ public class Token {
                     .withExpiresAt(Expired())
                     .sign(algoritmo);
         } catch (JWTCreationException exception){
-            throw new RuntimeException("erro ao gerrar token jwt", exception);}
+            throw new RuntimeException("erro ao gerar token jwt", exception);}
     }
 
     public String VerifyToken (String tokenJWT) {
         try {
             var algoritmo = Algorithm.HMAC256(secret);
             return JWT.require(algoritmo)
-                    .withIssuer("API Voll.med")
+                    .withIssuer("API- PathCarrer")
                     .build()
                     .verify(tokenJWT)
                     .getSubject();

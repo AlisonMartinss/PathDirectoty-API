@@ -5,7 +5,7 @@ import PathCarrer.API.DTO.PathDTO;
 import PathCarrer.API.DTO.Update.ClassUpdate;
 import PathCarrer.API.DTO.Update.ModuloUpdateDTO;
 import PathCarrer.API.DTO.Update.PathUpdate;
-import PathCarrer.API.Service.authorPath.authorPath;
+import PathCarrer.API.Service.authorPath.AuthorPath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/CRUD")
 public class Controller {
     @Autowired
-    private authorPath authorPath;
+    private AuthorPath authorPath;
 
     @GetMapping
     public String helloWord (){

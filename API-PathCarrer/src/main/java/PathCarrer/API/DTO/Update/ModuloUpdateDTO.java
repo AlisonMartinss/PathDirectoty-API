@@ -10,7 +10,7 @@ import java.util.List;
      (a). Adicionar um novo modulo no path;
      (b). Substituir um modulo;
 
-     - ID: id do path a qual contem o modulo que pretendemos mudar.
+     - ID: PathID do path a qual contem o modulo que pretendemos mudar.
      - Title: Titulo do novo modulo.
      - Desc: Descrição do novo modulo.
      - ClassList: Lista de aulas que irá compor o novo modulo.

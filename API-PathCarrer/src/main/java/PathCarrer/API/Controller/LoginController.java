@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/Login")
-
 public class LoginController {
     @Autowired
     private UserRepository userRepository;
