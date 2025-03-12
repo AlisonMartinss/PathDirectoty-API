@@ -3,16 +3,13 @@ package PathCarrer.API.Service.userProfile;
 
 import PathCarrer.API.DTO.GetsPathByUserDTO.AddPath;
 import PathCarrer.API.DTO.GetsPathByUserDTO.PathGetDTO;
-import PathCarrer.API.DTO.Update.PathUpdate;
 import PathCarrer.API.DTO.UsersDTO.LobyDTO;
 import PathCarrer.API.DTO.UsersDTO.userDTO;
 import PathCarrer.API.Model.User.MyPathsAdd;
-import PathCarrer.API.Model.User.User;
 import PathCarrer.API.Repository.PathRepository;
 import PathCarrer.API.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Objects;
 
@@ -21,7 +18,7 @@ import java.util.Objects;
  *
  *   - Loby: Trazer a tona as informções a respeito da sua conta.
  *   - AddPath: Adiciona Path.
- *   - RemovePath: Remove Path.
+ *   - RemovePath: Remove Path da lista de path do usuario.
  *   - GetPath: Traz informações sobre o path quando selecionado.
  *
  *      PENDENTES:
@@ -37,6 +34,13 @@ public class UserProfile {
 
     public LobyDTO Loby(userDTO userDTO){
         var user = userRepository.findByID(userDTO.userName());
+        for (int i = 0; i < user.getMyPaths().size(); i++){
+            if (pathRepository.findPath(user.getMyPaths().get(i).getPathID()) == null){
+                user.getMyPaths().remove(i);
+            }
+        }
+        userRepository.save(user);
+
         return new LobyDTO(user);
     }
 
@@ -55,13 +59,16 @@ public class UserProfile {
             if (Objects.equals(User.getMyPaths().get(i).getPathID(), AddPath.PathID())){
                 User.getMyPaths().remove(i);
                 userRepository.save(User);
+                break;
             }
         }
     }
-    public PathGetDTO GetPath (PathUpdate pathUpdate){
-        var Path = pathRepository.findPath(pathUpdate.PathID());
+    public PathGetDTO GetPath (String pathID){
+        var Path = pathRepository.findPath(pathID);
         return new PathGetDTO(Path);
     }
+
+
 
 
 

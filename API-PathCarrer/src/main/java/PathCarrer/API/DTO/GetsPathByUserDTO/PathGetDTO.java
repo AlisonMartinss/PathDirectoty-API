@@ -7,9 +7,10 @@ import PathCarrer.API.Model.modulo;
 
 import java.util.List;
 
-public record PathGetDTO(String title,String description, List<adjectives> adjectives, List<modulo> modulos, List<comments> comments) {
+public record PathGetDTO(String IdAuthor,String title,String description, List<adjectives> adjectives, List<modulo> modulos, List<comments> comments) {
     public PathGetDTO(Path pathList) {
         this(
+        pathList.getIdAuthor(),
         pathList.getTitle(),
         pathList.getDescription(),
         pathList.getAdjectivesElements(),

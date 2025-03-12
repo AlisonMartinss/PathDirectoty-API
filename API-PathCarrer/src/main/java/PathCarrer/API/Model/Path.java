@@ -23,7 +23,7 @@ public class Path {
 
     private  boolean active;
 
-    private String idAuthor;
+    private  String idAuthor;
 
     private  String title;
 
@@ -45,7 +45,7 @@ public class Path {
 
 
     public void CreateNewPath(PathDTO JSON) {
-
+        this.idAuthor = JSON.authorID();
         this.title = JSON.onePathDTO().title();
         this.category = JSON.onePathDTO().category();
         this.description = JSON.onePathDTO().descPathOver();
@@ -200,9 +200,20 @@ public class Path {
     }
 
 
+    public boolean isActive() {
+        return active;
+    }
 
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
+    public String getIdAuthor() {
+        return idAuthor;
+    }
 
-
+    public void setIdAuthor(String idAuthor) {
+        this.idAuthor = idAuthor;
+    }
 }
 

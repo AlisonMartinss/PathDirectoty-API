@@ -11,16 +11,16 @@ import PathCarrer.API.Repository.PathRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
-
- /**
+/**
 
   MOTIVAÇÃO: CLASSE DESTIANADA A FAZER AS OPERAÇÕES QUE TANGEM A RELAÇÃO PATH E SEU AUTOR.
 
- - PathCreate: Criar path.
+ - DefaultExplorer: Criar path.
  - PathUpdate: Atualiza o Path.
+ - PathDelete: Deleta Path.
  - UpadateNewModule: Adiciona um novo modulo.
  - UpdateModule: Atualiza o modulo já existente.
+ - DeleteModule: Deleta modulo
  - UpadateNewClass: Adiciona nova aula.
  - UpdateClassUnic: Atualiza uma aula.
 
@@ -48,17 +48,14 @@ public class AuthorPath {
      }
 
      public void  pathDelete (PathUpdate pathDTO){
-
          Path pathList = pathRepositoy.findPath(pathDTO.PathID());
-         pathList.deletePath();
-
-         pathRepositoy.save(pathList);
+         pathRepositoy.deleteById(pathDTO.PathID());
      }
 
 
      public void UpadateNewModule(ModuloUpdateDTO pathUpdate){
 
-        Path pathList = pathRepositoy.findPath(pathUpdate.id());
+        Path pathList = pathRepositoy.findPath(pathUpdate.PathID());
         pathList.AddNewModulo(pathUpdate);
 
         pathRepositoy.save(pathList);
@@ -67,19 +64,20 @@ public class AuthorPath {
 
     public void UpdateModule(ModuloUpdateDTO pathUpdate){
 
-        Path pathList = pathRepositoy.findPath(pathUpdate.id());
+        Path pathList = pathRepositoy.findPath(pathUpdate.PathID());
+        pathList.getModulos().get(pathUpdate.indexMoudulo()).setName(pathUpdate.title());
+        pathList.getModulos().get(pathUpdate.indexMoudulo()).setDescription(pathUpdate.desc());
 
-        var novoModulo = new modulo();
-        novoModulo.AddNewModulo(pathUpdate.title(), pathUpdate.desc(), pathUpdate.ClassList());
-
-        for (int i = 0; i < pathList.getModulos().size(); i++){
-
-            if ((Objects.equals(pathList.getModulos().get(i).getName(), pathUpdate.nameModulo()))){
-                pathList.getModulos().set(i,novoModulo);
-                pathRepositoy.save(pathList);
-            }
-        }
+        pathRepositoy.save(pathList);
     }
+
+     public void DeleteModule(ModuloUpdateDTO pathUpdate){
+         Path pathList = pathRepositoy.findPath(pathUpdate.PathID());
+         pathList.getModulos().remove(pathUpdate.indexMoudulo());
+         pathRepositoy.save(pathList);
+     }
+
+
 
      public void UpadateNewClass(ClassUpdate classUpdate){
 
@@ -88,39 +86,25 @@ public class AuthorPath {
          var newClass = new Aulas();
          newClass.ClassUpdate(classUpdate.threePath());
 
-         for (int i = 0; i < pathList.getModulos().size(); i++){
-             if ((Objects.equals(pathList.getModulos().get(i).getName(), classUpdate.nameModulo()))){
-                 pathList.getModulos().get(i).getModulocontent().add(newClass);
-                 pathRepositoy.save(pathList);
-             }
-         }
+         pathList.getModulos().get(classUpdate.indexModule()).getModulocontent().add(newClass);
+         pathRepositoy.save(pathList);
      }
 
 
     public void UpdateClassUnic(ClassUpdate classUpdate){
-
         Path pathList = pathRepositoy.findPath(classUpdate.id());
 
-        for (int i = 0; i < pathList.getModulos().size(); i++){
-            if ((Objects.equals(pathList.getModulos().get(i).getName(), classUpdate.nameModulo()))){
-                pathList.getModulos().get(i).getModulocontent().get(classUpdate.placeClass()).ClassUpdate(classUpdate.threePath());
-                pathRepositoy.save(pathList);
-            }
-        }
+        var newClass = new Aulas();
+        newClass.ClassUpdate(classUpdate.threePath());
+
+        pathList.getModulos().get(classUpdate.indexModule()).getModulocontent().set(classUpdate.indexClass(),newClass);
+        pathRepositoy.save(pathList);
     }
-
-     public void UpdateNewClass(ClassUpdate classUpdate){
-
+     public void DeleteClassUnic(ClassUpdate classUpdate){
          Path pathList = pathRepositoy.findPath(classUpdate.id());
 
-         for (int i = 0; i < pathList.getModulos().size(); i++){
-             if ((Objects.equals(pathList.getModulos().get(i).getName(), classUpdate.nameModulo()))){
-                 var newClass = new Aulas();
-                 newClass.ClassUpdate(classUpdate.threePath());
-                 pathList.getModulos().get(i).getModulocontent().add(newClass);
-                 pathRepositoy.save(pathList);
-             }
-         }
+         pathList.getModulos().get(classUpdate.indexModule()).getModulocontent().remove(classUpdate.indexClass());
+         pathRepositoy.save(pathList);
      }
 
 

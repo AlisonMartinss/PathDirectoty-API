@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/CRUD")
-public class Controller {
+public class AuthorController {
     @Autowired
     private AuthorPath authorPath;
 
@@ -56,6 +56,13 @@ public class Controller {
     }
 
     @Transactional
+    @PostMapping("/DeleteModule")
+    public ResponseEntity DeleteModule(@RequestBody ModuloUpdateDTO pathUpdate){
+        authorPath.DeleteModule(pathUpdate);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Transactional
     @PostMapping("/UpadateNewClass")
     public ResponseEntity UpadateNewClass(@RequestBody ClassUpdate classUpdate){
         authorPath.UpadateNewClass(classUpdate);
@@ -70,11 +77,13 @@ public class Controller {
     }
 
     @Transactional
-    @PostMapping("/UpdateNewClass")
-    public ResponseEntity UpdateNewClass (@RequestBody ClassUpdate classUpdate){
-        authorPath.UpdateNewClass(classUpdate);
+    @PutMapping("/DeleteClassUnic")
+    public ResponseEntity DeleteClassUnic (@RequestBody ClassUpdate classUpdate){
+        authorPath.DeleteClassUnic(classUpdate);
         return ResponseEntity.noContent().build();
     }
+
+
 
 
 

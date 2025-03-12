@@ -20,6 +20,9 @@ public class modulo {
         this.modulocontent = new ArrayList<>();
         this.name = name;
         this.description = description;
+        var presentation = new Aulas();
+        presentation.ClassCreate("Apresentação",description,null);
+        this.modulocontent.add(presentation);
         this.qtdAulasModulo = fillSet(modulocontent,this.modulocontent);
 
     }
