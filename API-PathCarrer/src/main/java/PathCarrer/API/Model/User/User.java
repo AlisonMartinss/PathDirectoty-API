@@ -31,6 +31,8 @@ public class User implements UserDetails {
 
     private String BannerProfile;
 
+    private String Desc;
+
     private List<insignia> InsigniaON;
 
     private List<insignia> InsigniaStorage;
@@ -116,6 +118,14 @@ public class User implements UserDetails {
 
     public void setMessages(List<messages> messages) {
         Messages = messages;
+    }
+
+    public String getDesc() {
+        return Desc;
+    }
+
+    public void setDesc(String desc) {
+        Desc = desc;
     }
 
     /* ===== UserDetails ==== */

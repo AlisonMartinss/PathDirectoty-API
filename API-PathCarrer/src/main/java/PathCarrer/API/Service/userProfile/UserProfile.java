@@ -4,13 +4,18 @@ package PathCarrer.API.Service.userProfile;
 import PathCarrer.API.DTO.GetsPathByUserDTO.AddPath;
 import PathCarrer.API.DTO.GetsPathByUserDTO.PathGetDTO;
 import PathCarrer.API.DTO.UsersDTO.LobyDTO;
+import PathCarrer.API.DTO.UsersDTO.UpdateProfileName;
+import PathCarrer.API.DTO.UsersDTO.UserEasyAspects;
 import PathCarrer.API.DTO.UsersDTO.userDTO;
+import PathCarrer.API.Model.Path;
 import PathCarrer.API.Model.User.MyPathsAdd;
 import PathCarrer.API.Repository.PathRepository;
 import PathCarrer.API.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -31,6 +36,9 @@ public class UserProfile {
     private UserRepository userRepository;
     @Autowired
     private PathRepository pathRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public LobyDTO Loby(userDTO userDTO){
         var user = userRepository.findByID(userDTO.userName());
@@ -65,13 +73,64 @@ public class UserProfile {
     }
     public PathGetDTO GetPath (String pathID){
         var Path = pathRepository.findPath(pathID);
-        return new PathGetDTO(Path);
+        var Author = userRepository.findByID(Path.getIdAuthor());
+        return new PathGetDTO(Path,Author);
+    }
+
+    public void NewName (UpdateProfileName userDTO){
+
+        var User = userRepository.findByID(userDTO.userName());
+        var newUser = userRepository.findByID(userDTO.newUsername());
+        var CopyUser = User;
+
+        if (newUser == null){
+            List<Path> pathByAuthor = pathRepository.findByAuthor(userDTO.userName());
+
+            for (int i = 0; i < pathByAuthor.size(); i++){
+                pathByAuthor.get(i).setIdAuthor(userDTO.newUsername());
+                pathRepository.save(pathByAuthor.get(i));
+            }
+
+            userRepository.delete(User);
+            CopyUser.setUserName(userDTO.newUsername());
+            userRepository.save(CopyUser);
+        }
+    }
+
+    public void UpdatePictureProfile(UserEasyAspects UserEasyAspects){
+        var User = userRepository.findByID(UserEasyAspects.userName());
+        if (UserEasyAspects.PictureProfile() != null && !UserEasyAspects.PictureProfile().trim().isEmpty()){
+        User.setPictureProfile(UserEasyAspects.PictureProfile());}
+        if (UserEasyAspects.BannerProfile() != null && !UserEasyAspects.BannerProfile().trim().isEmpty()){
+            User.setBannerProfile(UserEasyAspects.BannerProfile());
+        }
+        userRepository.save(User);
+    }
+
+    public void UpdateDesc (UserEasyAspects userEasyAspects){
+        var User = userRepository.findByID(userEasyAspects.userName());
+        User.setDesc(userEasyAspects.desc());
+        userRepository.save(User);
+
+    }
+    public void NewPassword (Password password){
+        var User = userRepository.findByID(password.userName());
+
+        if (passwordEncoder.matches(password.curretPassword(),User.getPassword())){
+            User.setPassword(passwordEncoder.encode(password.newPassWord()));
+            userRepository.save(User);
+        }
+        else {
+            System.out.println("NÃO IGUAIS");
+        }
     }
 
 
+    public void DeleteProfile(Password password) {
+        var User = userRepository.findByID(password.userName());
 
-
-
-
-
+        if (passwordEncoder.matches(password.curretPassword(),User.getPassword())){
+            userRepository.delete(User);
+        }
+    }
 }

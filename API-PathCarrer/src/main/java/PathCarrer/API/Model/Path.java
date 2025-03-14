@@ -29,6 +29,8 @@ public class Path {
 
     private  String category;
 
+    private String banner;
+
     private  String description;
 
     private int nClass;
@@ -49,6 +51,7 @@ public class Path {
         this.title = JSON.onePathDTO().title();
         this.category = JSON.onePathDTO().category();
         this.description = JSON.onePathDTO().descPathOver();
+        this.banner = JSON.onePathDTO().banner();
         this.tags = new ArrayList<>();
         this.adjectivesElements = new ArrayList<>();
         this.comments = new ArrayList<>();

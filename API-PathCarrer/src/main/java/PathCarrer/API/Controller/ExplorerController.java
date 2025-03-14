@@ -18,7 +18,6 @@ public class ExplorerController {
     }
     @GetMapping("/CategoryExplorer")
     public ResponseEntity CategoryExplorer (@RequestParam String category){
-        System.out.println("Explorer");
         return ResponseEntity.ok(explorerService.CategoryExplorer(category));
     }
 

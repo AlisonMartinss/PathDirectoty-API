@@ -14,6 +14,7 @@ public class Explorer {
     private String title;
     private String category;
     private List<adjectives> adjectivesElements;
+    private String banner;
 
     // ==== Getters & Setters ==== //
 
@@ -48,5 +49,13 @@ public class Explorer {
 
     public void setAdjectivesElements(List<adjectives> adjectivesElements) {
         this.adjectivesElements = adjectivesElements;
+    }
+
+    public String getBanner() {
+        return banner;
+    }
+
+    public void setBanner(String banner) {
+        this.banner = banner;
     }
 }
