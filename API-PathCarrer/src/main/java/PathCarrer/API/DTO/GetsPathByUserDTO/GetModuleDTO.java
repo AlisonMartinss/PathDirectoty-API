@@ -1,7 +1,7 @@
 package PathCarrer.API.DTO.GetsPathByUserDTO;
 
-import PathCarrer.API.Model.Aulas;
-import PathCarrer.API.Model.modulo;
+import PathCarrer.API.Model.Path.Aulas;
+import PathCarrer.API.Model.Path.modulo;
 
 import java.util.List;
 

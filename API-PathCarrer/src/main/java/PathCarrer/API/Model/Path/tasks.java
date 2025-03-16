@@ -1,4 +1,6 @@
-package PathCarrer.API.Model;
+package PathCarrer.API.Model.Path;
+
+import PathCarrer.API.Model.Path.paths;
 
 import java.util.List;
 

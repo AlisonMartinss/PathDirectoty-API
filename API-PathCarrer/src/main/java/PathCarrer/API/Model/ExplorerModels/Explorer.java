@@ -1,6 +1,6 @@
 package PathCarrer.API.Model.ExplorerModels;
 
-import PathCarrer.API.Model.adjectives;
+import PathCarrer.API.Model.Path.adjectives;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;

@@ -1,9 +1,10 @@
 package PathCarrer.API.Repository;
 
 import PathCarrer.API.Model.ExplorerModels.Explorer;
-import PathCarrer.API.Model.Path;
+import PathCarrer.API.Model.Path.Path;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 

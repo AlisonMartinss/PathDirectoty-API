@@ -1,16 +1,15 @@
-package PathCarrer.API.Model;
+package PathCarrer.API.Model.Path;
 
 import PathCarrer.API.DTO.PathDTO;
 import PathCarrer.API.DTO.Update.ModuloUpdateDTO;
 import PathCarrer.API.DTO.Update.PathUpdate;
+import PathCarrer.API.Model.Path.Comments.Comment;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
-
-
 
 
 @Document(collection = "Testagem1312")
@@ -41,9 +40,9 @@ public class Path {
 
     private List<modulo> modulos;
 
-    private List <comments> comments;
+    private List <Comment> comments;
 
-    private List <comments> forum;
+    private List <Comment> forum;
 
 
     public void CreateNewPath(PathDTO JSON) {
@@ -91,13 +90,13 @@ public class Path {
 
     private void fillSetTags(List<String> JSON, List<String> tagsList) {
         for (int i = 0; i < JSON.size(); i++) {
-            tagsList.add(JSON.get(i));
+            tagsList.set(i,JSON.get(i));
         }
     }
 
     private void fillSetAdjectives(List<String> JSON, List<adjectives> List) {
         for (int i = 0; i < (JSON.size()); i++) {
-            List.add(new adjectives(JSON.get(i)));
+            List.set(i,new adjectives(JSON.get(i)));
         }
     }
 
@@ -107,18 +106,86 @@ public class Path {
             modulos.add(novo);
     }
 
-    public void UpdateModuloStats (PathUpdate path){
+    public void UpdatePathStats(PathUpdate path){
         this.title = path.onePathDTO().title();
         this.category = path.onePathDTO().category();
         this.description = path.onePathDTO().descPathOver();
+        this.banner = path.onePathDTO().banner();
         fillSetTags(path.onePathDTO().tags(),this.tags);
         fillSetAdjectives(path.onePathDTO().adjetives(),this.adjectivesElements);
     }
 
-    public  void deletePath (){
-        this.active = false;
+    public  void postComment (String UserID, String comment, List<Integer> address){
+
+        if (address.isEmpty()){ // Siguinifica que será postado no forum.
+            List<Integer> newAddres = List.of(this.comments.size());
+            var newComment = new Comment(UserID,comment,newAddres);
+            this.comments.add(newComment);
+        }
+        else {
+            var commentX = this.comments.get(address.get(0));
+            int dimension = 0;
+
+            for (int i = 1; i < address.size(); i++) {
+                commentX = commentX.getAnswers().get(address.get(i));
+            }
+            if (!commentX.getAnswers().isEmpty()){
+                dimension = commentX.getAnswers().size();
+            }
+            address.add(dimension);
+            var newComment = new Comment(UserID, comment, address);
+            commentX.AnswerAdd(newComment);
+
+            }
     }
 
+
+    public  void DeleteComment (List<Integer> address){
+
+        if (address.size() == 1){
+            var commentX = this.comments;
+            commentX.remove((int) address.get(0));
+            if (!(commentX.size() == address.get(0)) && !(commentX.isEmpty())){
+                updateAdrresCommetns(commentX,address.get(0));
+            }
+        }
+        else {
+             var commentX = this.comments.get(address.get(0));
+             for (int i = 1; i < address.size()-1; i++) {
+                commentX = commentX.getAnswers().get(address.get(i)); // objeto pai
+             }
+
+             int a = address.get(address.size()-1); // cordenada do proprio
+             commentX.getAnswers().remove(a);
+
+            if (!(commentX.getAnswers().size() == a) && !(commentX.getAnswers().isEmpty())){
+                updateAdrresCommetns(commentX.getAnswers(),a);
+            }
+        }
+    }
+
+    private void updateAdrresCommetns(List<Comment> commentlist,int indexY){
+        // Se ta aqui eu se que: não é o ultimo nem o unico
+        for(int i = (indexY); i < commentlist.size(); i++){
+            var neighbor  = commentlist.get(i); // pegou elemento
+            var sunAddres = neighbor.getAddress();
+            sunAddres.set(sunAddres.size()-1,i);
+            neighbor.setAddress(sunAddres);
+        }
+    }
+
+    /*
+    * private void updateAdrresCommetns(Comment comment,int indexY){
+        // Se ta aqui eu se que: não é o ultimo nem o unico
+        for(int i = (indexY); i < comment.getAnswers().size(); i++){
+            var neighbor  = comment.getAnswers().get(i); // pegou elemento
+            var sunAddres = neighbor.getAddress();
+            sunAddres.set(sunAddres.size()-1,i);
+            neighbor.setAddress(sunAddres);
+        }
+    }
+    *
+    * */
 
     //* ===== Getters & Setters ====== *//
 
@@ -186,19 +253,19 @@ public class Path {
         this.modulos = modulos;
     }
 
-    public List<PathCarrer.API.Model.comments> getComments() {
+    public List<Comment> getComments() {
         return comments;
     }
 
-    public void setComments(List<PathCarrer.API.Model.comments> comments) {
+    public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
 
-    public List<PathCarrer.API.Model.comments> getForum() {
+    public List<Comment> getForum() {
         return forum;
     }
 
-    public void setForum(List<PathCarrer.API.Model.comments> forum) {
+    public void setForum(List<Comment> forum) {
         this.forum = forum;
     }
 

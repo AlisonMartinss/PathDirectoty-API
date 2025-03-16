@@ -1,4 +1,4 @@
-package PathCarrer.API.Model;
+package PathCarrer.API.Model.Path;
 
 import lombok.Getter;
 import lombok.Setter;

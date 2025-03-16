@@ -1,5 +1,6 @@
 package PathCarrer.API.Model;
 
+import PathCarrer.API.Model.Path.tasks;
 import lombok.Getter;
 import lombok.Setter;
 

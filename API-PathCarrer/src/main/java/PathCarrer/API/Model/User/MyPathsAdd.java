@@ -1,6 +1,6 @@
 package PathCarrer.API.Model.User;
 
-import PathCarrer.API.Model.Path;
+import PathCarrer.API.Model.Path.Path;
 
 import java.util.List;
 

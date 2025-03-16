@@ -1,6 +1,7 @@
-package PathCarrer.API.Model;
+package PathCarrer.API.Model.Path;
 
 import PathCarrer.API.DTO.CreatePathStep.threePath;
+import PathCarrer.API.Model.Path.Aulas;
 import lombok.*;
 
 import java.util.ArrayList;

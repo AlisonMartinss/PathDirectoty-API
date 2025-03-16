@@ -4,9 +4,8 @@ import PathCarrer.API.DTO.PathDTO;
 import PathCarrer.API.DTO.Update.ClassUpdate;
 import PathCarrer.API.DTO.Update.ModuloUpdateDTO;
 import PathCarrer.API.DTO.Update.PathUpdate;
-import PathCarrer.API.Model.Aulas;
-import PathCarrer.API.Model.Path;
-import PathCarrer.API.Model.modulo;
+import PathCarrer.API.Model.Path.Aulas;
+import PathCarrer.API.Model.Path.Path;
 import PathCarrer.API.Repository.PathRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,15 +40,16 @@ public class AuthorPath {
 
      public void  pathUpdate (PathUpdate pathDTO){
 
-         Path pathList = pathRepositoy.findPath(pathDTO.PathID());
-         pathList.UpdateModuloStats(pathDTO);
+         Path path = pathRepositoy.findPath(pathDTO.PathID());
+         path.UpdatePathStats(pathDTO);
 
-         pathRepositoy.save(pathList);
+         pathRepositoy.save(path);
      }
 
      public void  pathDelete (PathUpdate pathDTO){
-         Path pathList = pathRepositoy.findPath(pathDTO.PathID());
-         pathRepositoy.deleteById(pathDTO.PathID());
+        if (pathRepositoy.findPath(pathDTO.PathID()) != null){
+            pathRepositoy.deleteById(pathDTO.PathID());
+         }
      }
 
 

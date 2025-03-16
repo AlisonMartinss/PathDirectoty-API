@@ -27,14 +27,14 @@ public class AuthorController {
         authorPath.PathCreate(path);
         return ResponseEntity.noContent().build();
     }
-    @PutMapping("/PathUpdate")
+    @PostMapping("/PathUpdate")
     @Transactional
     public ResponseEntity pathUpdate(@RequestBody PathUpdate pathUpdate){
         authorPath.pathUpdate(pathUpdate);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/PathDelete")
+    @PostMapping("/PathDelete")
     @Transactional
     public ResponseEntity pathDelete(@RequestBody PathUpdate pathUpdate){
         authorPath.pathDelete(pathUpdate);

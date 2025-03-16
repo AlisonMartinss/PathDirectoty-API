@@ -7,7 +7,7 @@ import PathCarrer.API.DTO.UsersDTO.LobyDTO;
 import PathCarrer.API.DTO.UsersDTO.UpdateProfileName;
 import PathCarrer.API.DTO.UsersDTO.UserEasyAspects;
 import PathCarrer.API.DTO.UsersDTO.userDTO;
-import PathCarrer.API.Model.Path;
+import PathCarrer.API.Model.Path.Path;
 import PathCarrer.API.Model.User.MyPathsAdd;
 import PathCarrer.API.Repository.PathRepository;
 import PathCarrer.API.Repository.UserRepository;
