@@ -7,6 +7,7 @@ import PathCarrer.API.DTO.Update.PathUpdate;
 import PathCarrer.API.Model.Path.Aulas;
 import PathCarrer.API.Model.Path.Path;
 import PathCarrer.API.Repository.PathRepository;
+import PathCarrer.API.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,11 +30,14 @@ import org.springframework.stereotype.Service;
 public class AuthorPath {
     @Autowired
     private PathRepository pathRepositoy;
+    @Autowired
+    private UserRepository userRepository;
 
     public void PathCreate(PathDTO pathDTO){
 
         var novo = new Path();
-        novo.CreateNewPath(pathDTO);
+        var User = userRepository.findByuserName(pathDTO.authorID());
+        novo.CreateNewPath(pathDTO,User.getWorldID());
 
         pathRepositoy.save(novo);
     }

@@ -2,7 +2,9 @@ package PathCarrer.API.Model.User;
 
 import PathCarrer.API.DTO.UsersDTO.userDTO;
 import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,15 +17,17 @@ import java.util.List;
 @Document(collection = "Users")
 @NoArgsConstructor
 @AllArgsConstructor
-
 @Builder
 public class User implements UserDetails {
 
 
-    @Id
-    private String userName;
 
-    private String worldID;
+
+    @Id
+    private ObjectId worldID;
+
+    @Indexed(unique = true)
+    private String userName;
 
     private String password;
 
@@ -55,12 +59,8 @@ public class User implements UserDetails {
         this.userName = userName;
     }
 
-    public String getWorldID() {
+    public ObjectId getWorldID() {
         return worldID;
-    }
-
-    public void setWorldID(String worldID) {
-        this.worldID = worldID;
     }
 
     public void setPassword(String password) {

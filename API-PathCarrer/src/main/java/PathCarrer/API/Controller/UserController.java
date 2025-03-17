@@ -17,9 +17,9 @@ public class UserController {
     @Autowired
     private UserProfile userProfile;
 
-    @PostMapping("/Getloby")
-    public ResponseEntity Loby (@RequestBody  userDTO userDTO){
-        var LobyUser = userProfile.Loby(userDTO);
+    @GetMapping("/Getloby")
+    public ResponseEntity Loby (@RequestParam String username){
+        var LobyUser = userProfile.Loby(username);
         return ResponseEntity.ok(LobyUser);
     }
 
@@ -39,7 +39,6 @@ public class UserController {
     }
 
     @GetMapping("/GetPath")
-    @Transactional
     public ResponseEntity GetPath (@RequestParam String PathID){
         return ResponseEntity.ok(userProfile.GetPath(PathID));
     }

@@ -5,6 +5,7 @@ import PathCarrer.API.DTO.Update.ModuloUpdateDTO;
 import PathCarrer.API.DTO.Update.PathUpdate;
 import PathCarrer.API.Model.Path.Comments.Comment;
 import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -22,7 +23,7 @@ public class Path {
 
     private  boolean active;
 
-    private  String idAuthor;
+    private ObjectId idAuthor;
 
     private  String title;
 
@@ -45,8 +46,8 @@ public class Path {
     private List <Comment> forum;
 
 
-    public void CreateNewPath(PathDTO JSON) {
-        this.idAuthor = JSON.authorID();
+    public void CreateNewPath(PathDTO JSON,ObjectId worldID) {
+        this.idAuthor = worldID;
         this.title = JSON.onePathDTO().title();
         this.category = JSON.onePathDTO().category();
         this.description = JSON.onePathDTO().descPathOver();
@@ -87,14 +88,24 @@ public class Path {
         this.active = true;
 
     }
-
     private void fillSetTags(List<String> JSON, List<String> tagsList) {
+        tagsList.addAll(JSON);
+    }
+
+
+    private void UpdatefillSetTags(List<String> JSON, List<String> tagsList) {
         for (int i = 0; i < JSON.size(); i++) {
             tagsList.set(i,JSON.get(i));
         }
     }
 
     private void fillSetAdjectives(List<String> JSON, List<adjectives> List) {
+        for (int i = 0; i < (JSON.size()); i++) {
+            List.add(new adjectives(JSON.get(i)));
+        }
+    }
+
+    private void UpdatefillSetAdjectives(List<String> JSON, List<adjectives> List) {
         for (int i = 0; i < (JSON.size()); i++) {
             List.set(i,new adjectives(JSON.get(i)));
         }
@@ -111,15 +122,24 @@ public class Path {
         this.category = path.onePathDTO().category();
         this.description = path.onePathDTO().descPathOver();
         this.banner = path.onePathDTO().banner();
-        fillSetTags(path.onePathDTO().tags(),this.tags);
-        fillSetAdjectives(path.onePathDTO().adjetives(),this.adjectivesElements);
+        UpdatefillSetTags(path.onePathDTO().tags(),this.tags);
+        UpdatefillSetAdjectives(path.onePathDTO().adjetives(),this.adjectivesElements);
     }
 
-    public  void postComment (String UserID, String comment, List<Integer> address){
+    public  void postComment (String wordID, String comment, List<Integer> address, String profilePIC,String userName){
+
+        // BUSCAR OBJETO COM TAL ADDRES E POSTAR NO SEU CAMPO ANSWERS
+
+       
+
+        /*
+
+        Funcional:
 
         if (address.isEmpty()){ // Siguinifica que será postado no forum.
             List<Integer> newAddres = List.of(this.comments.size());
-            var newComment = new Comment(UserID,comment,newAddres);
+            var newComment = new Comment(wordID,comment,newAddres);
+            newComment.UpdatepictureProfile(profilePIC,userName);
             this.comments.add(newComment);
         }
         else {
@@ -133,10 +153,10 @@ public class Path {
                 dimension = commentX.getAnswers().size();
             }
             address.add(dimension);
-            var newComment = new Comment(UserID, comment, address);
+            var newComment = new Comment(wordID, comment, address);
+            newComment.UpdatepictureProfile(profilePIC,userName);
             commentX.AnswerAdd(newComment);
-
-            }
+        }*/
     }
 
 
@@ -173,19 +193,6 @@ public class Path {
             neighbor.setAddress(sunAddres);
         }
     }
-
-    /*
-    * private void updateAdrresCommetns(Comment comment,int indexY){
-        // Se ta aqui eu se que: não é o ultimo nem o unico
-        for(int i = (indexY); i < comment.getAnswers().size(); i++){
-            var neighbor  = comment.getAnswers().get(i); // pegou elemento
-            var sunAddres = neighbor.getAddress();
-            sunAddres.set(sunAddres.size()-1,i);
-            neighbor.setAddress(sunAddres);
-        }
-    }
-    *
-    * */
 
     //* ===== Getters & Setters ====== *//
 
@@ -254,7 +261,7 @@ public class Path {
     }
 
     public List<Comment> getComments() {
-        return comments;
+        return this.comments;
     }
 
     public void setComments(List<Comment> comments) {
@@ -278,12 +285,8 @@ public class Path {
         this.active = active;
     }
 
-    public String getIdAuthor() {
+    public ObjectId getIdAuthor() {
         return idAuthor;
-    }
-
-    public void setIdAuthor(String idAuthor) {
-        this.idAuthor = idAuthor;
     }
 }
 

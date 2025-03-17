@@ -4,17 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Comment {
-    private String userId;
+
+    private String worldID;
+    private String userName;
+    private String PictureProfile;
     private String comment;
     private List<Comment> answers;
     private List<Integer> address;
 
-    public Comment(String userId, String comment, List<Integer> address) {
-        this.userId = userId;
+    public Comment(String worldID, String comment, List<Integer> address) {
+        this.worldID = worldID;
         this.comment = comment;
         this.answers = new ArrayList<>();
-        this.address = new ArrayList<>();
         this.address = address;
+    }
+
+    public void UpdatepictureProfile (String profilePic, String userName){
+        this.PictureProfile = profilePic;
+        this.userName = userName;
     }
 
     public void AnswerAdd (Comment comment){
@@ -24,12 +31,19 @@ public class Comment {
     // ==== Getters & Setters ==== //
 
 
-    public String getUserId() {
-        return userId;
+    public String getUserName() {
+        return userName;
+    }
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public String getWorldIDDesvio() {
+        return worldID;
+    }
+
+    public String getPictureProfile() {
+        return PictureProfile;
     }
 
     public String getComment() {

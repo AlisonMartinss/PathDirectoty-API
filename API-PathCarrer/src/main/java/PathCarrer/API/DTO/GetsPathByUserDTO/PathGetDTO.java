@@ -15,7 +15,7 @@ public record PathGetDTO(
         List<modulo> modulos, List<Comment> comments ) {
     public PathGetDTO(Path pathList, User user) {
         this(
-        pathList.getIdAuthor(),
+        user.getUsername(),
         user.getPictureProfile(),
         user.getBannerProfile(),
         pathList.getTitle(),
