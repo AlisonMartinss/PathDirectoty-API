@@ -1,5 +1,6 @@
 package PathCarrer.API.Service.authorPath;
 
+import PathCarrer.API.DTO.ParallelDataDTO.ParallelDataDTO;
 import PathCarrer.API.DTO.PathDTO;
 import PathCarrer.API.DTO.Update.ClassUpdate;
 import PathCarrer.API.DTO.Update.ModuloUpdateDTO;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
  - DeleteModule: Deleta modulo
  - UpadateNewClass: Adiciona nova aula.
  - UpdateClassUnic: Atualiza uma aula.
+ - GetProfileInfo: Obtem informações mais recentes de determinado user.
 
  */
 
@@ -110,6 +112,11 @@ public class AuthorPath {
          pathList.getModulos().get(classUpdate.indexModule()).getModulocontent().remove(classUpdate.indexClass());
          pathRepositoy.save(pathList);
      }
+
+    public ParallelDataDTO GetProfileInfo (String worldID){
+        var User = userRepository.findByWorldID(worldID);
+        return new ParallelDataDTO(User);
+    }
 
 
 

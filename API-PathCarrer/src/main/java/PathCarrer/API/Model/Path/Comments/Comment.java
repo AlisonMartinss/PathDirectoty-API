@@ -6,11 +6,10 @@ import java.util.List;
 public class Comment {
 
     private String worldID;
-    private String userName;
-    private String PictureProfile;
     private String comment;
-    private List<Comment> answers;
     private List<Integer> address;
+    private List<Comment> answers;
+
 
     public Comment(String worldID, String comment, List<Integer> address) {
         this.worldID = worldID;
@@ -19,10 +18,6 @@ public class Comment {
         this.address = address;
     }
 
-    public void UpdatepictureProfile (String profilePic, String userName){
-        this.PictureProfile = profilePic;
-        this.userName = userName;
-    }
 
     public void AnswerAdd (Comment comment){
         this.answers.add(comment);
@@ -31,19 +26,10 @@ public class Comment {
     // ==== Getters & Setters ==== //
 
 
-    public String getUserName() {
-        return userName;
-    }
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+
 
     public String getWorldIDDesvio() {
         return worldID;
-    }
-
-    public String getPictureProfile() {
-        return PictureProfile;
     }
 
     public String getComment() {

@@ -112,9 +112,9 @@ public class Path {
     }
 
     public void AddNewModulo (ModuloUpdateDTO updateDTO){
-            var novo = new modulo();
-            novo.AddNewModulo(updateDTO.title(),updateDTO.desc(),updateDTO.ClassList());
-            modulos.add(novo);
+        var novo = new modulo();
+        novo.AddNewModulo(updateDTO.title(),updateDTO.desc(),updateDTO.ClassList());
+        modulos.add(novo);
     }
 
     public void UpdatePathStats(PathUpdate path){
@@ -128,18 +128,11 @@ public class Path {
 
     public  void postComment (String wordID, String comment, List<Integer> address, String profilePIC,String userName){
 
-        // BUSCAR OBJETO COM TAL ADDRES E POSTAR NO SEU CAMPO ANSWERS
-
-       
-
-        /*
-
         Funcional:
 
         if (address.isEmpty()){ // Siguinifica que será postado no forum.
             List<Integer> newAddres = List.of(this.comments.size());
             var newComment = new Comment(wordID,comment,newAddres);
-            newComment.UpdatepictureProfile(profilePIC,userName);
             this.comments.add(newComment);
         }
         else {
@@ -154,9 +147,8 @@ public class Path {
             }
             address.add(dimension);
             var newComment = new Comment(wordID, comment, address);
-            newComment.UpdatepictureProfile(profilePIC,userName);
             commentX.AnswerAdd(newComment);
-        }*/
+        }
     }
 
 
@@ -170,13 +162,13 @@ public class Path {
             }
         }
         else {
-             var commentX = this.comments.get(address.get(0));
-             for (int i = 1; i < address.size()-1; i++) {
+            var commentX = this.comments.get(address.get(0));
+            for (int i = 1; i < address.size()-1; i++) {
                 commentX = commentX.getAnswers().get(address.get(i)); // objeto pai
-             }
+            }
 
-             int a = address.get(address.size()-1); // cordenada do proprio
-             commentX.getAnswers().remove(a);
+            int a = address.get(address.size()-1); // cordenada do proprio
+            commentX.getAnswers().remove(a);
 
             if (!(commentX.getAnswers().size() == a) && !(commentX.getAnswers().isEmpty())){
                 updateAdrresCommetns(commentX.getAnswers(),a);
@@ -289,4 +281,3 @@ public class Path {
         return idAuthor;
     }
 }
-

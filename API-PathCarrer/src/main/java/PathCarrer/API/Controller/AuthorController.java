@@ -16,6 +16,7 @@ public class AuthorController {
     @Autowired
     private AuthorPath authorPath;
 
+
     @GetMapping
     public String helloWord (){
         return "Hello Word ";
@@ -82,6 +83,14 @@ public class AuthorController {
         authorPath.DeleteClassUnic(classUpdate);
         return ResponseEntity.noContent().build();
     }
+
+    @Transactional
+    @GetMapping("/GetInfoUser")
+    public ResponseEntity GetInfoUser (@RequestParam String username){
+        return ResponseEntity.ok(authorPath.GetProfileInfo(username));
+    }
+
+
 
 
 

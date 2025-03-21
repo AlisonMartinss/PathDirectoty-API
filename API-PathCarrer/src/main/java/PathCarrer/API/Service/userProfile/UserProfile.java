@@ -9,7 +9,6 @@ import PathCarrer.API.DTO.UsersDTO.UserEasyAspects;
 import PathCarrer.API.Model.User.MyPathsAdd;
 import PathCarrer.API.Repository.PathRepository;
 import PathCarrer.API.Repository.UserRepository;
-import PathCarrer.API.Service.ParallelData.ParallelDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,10 +22,13 @@ import java.util.Objects;
  *   - AddPath: Adiciona Path.
  *   - RemovePath: Remove Path da lista de path do usuario.
  *   - GetPath: Traz informações sobre o path quando selecionado.
+ *   - NewName: Atualiza nome de usuario.
+ *   - UpdatePictureProfile: Atualização do foto de perfil e/ou banner.
+ *   - UpdateDesc: Atualiza a descrição.
+ *   - NewPassword: Atualzia a senha.
+ *   - DeleteProfile: Deleta perfil.
  *
- *      PENDENTES:
- *      - Editar informações do pergil: Foto do perfil, banner, e desc e anotações
- * **/
+ **/
 @Service
 public class UserProfile {
 
@@ -36,8 +38,6 @@ public class UserProfile {
     private PathRepository pathRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
-    @Autowired
-    private ParallelDataService parallelData;
 
     public LobyDTO Loby(String userName){
         var user = userRepository.findByuserName(userName);
@@ -69,20 +69,16 @@ public class UserProfile {
             }
         }
     }
+
     public PathGetDTO GetPath (String pathID){
         var Path = pathRepository.findPath(pathID);
         var Author = userRepository.findByWorldID(Path.getIdAuthor().toString());
-
-        for (int i = 0; i < Path.getComments().size(); i++){
-            var User = userRepository.findByWorldID(Path.getComments().get(i).getWorldIDDesvio());
-            Path.getComments().get(i).UpdatepictureProfile(User.getPictureProfile(),User.getUserName());
-        }
-
         return new PathGetDTO(Path,Author);
     }
 
     public void NewName (UpdateProfileName userDTO){
         var User = userRepository.findByuserName(userDTO.userName());
+        System.out.println(User);
 
         if (userRepository.findByuserName(userDTO.newUsername()) == null){
             var CopyUser = User;
@@ -96,7 +92,7 @@ public class UserProfile {
     public void UpdatePictureProfile(UserEasyAspects UserEasyAspects){
         var User = userRepository.findByuserName(UserEasyAspects.userName());
         if (UserEasyAspects.PictureProfile() != null && !UserEasyAspects.PictureProfile().trim().isEmpty()){
-        User.setPictureProfile(UserEasyAspects.PictureProfile());}
+            User.setPictureProfile(UserEasyAspects.PictureProfile());}
         if (UserEasyAspects.BannerProfile() != null && !UserEasyAspects.BannerProfile().trim().isEmpty()){
             User.setBannerProfile(UserEasyAspects.BannerProfile());
         }
@@ -107,8 +103,8 @@ public class UserProfile {
         var User = userRepository.findByuserName(userEasyAspects.userName());
         User.setDesc(userEasyAspects.desc());
         userRepository.save(User);
-
     }
+
     public void NewPassword (Password password){
         var User = userRepository.findByuserName(password.userName());
 
@@ -117,7 +113,6 @@ public class UserProfile {
             userRepository.save(User);
         }
     }
-
 
     public void DeleteProfile(Password password) {
         var User = userRepository.findByuserName(password.userName());
