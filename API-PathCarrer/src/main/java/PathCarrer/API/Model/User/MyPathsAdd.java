@@ -1,72 +1,46 @@
 package PathCarrer.API.Model.User;
 
-import PathCarrer.API.Model.Path.Path;
+import java.util.*;
 
-import java.util.List;
-
-/**
-
- MOTIVAÇÃO: TER EM MÃOS OS PATH'S ADICIONADO PELOP USUARIO.
-
-   - img: LOGO DO PATH.
-
-   - moduleSeenList: SABER QUAIS MODULOS/AULAS JÁ FORAM ASSISTIDAS. ESSENCIALMENTE É UMA
-     LISTA DE UM MODEL DE MODULOS.(MODEL DE MODULO DIFERENTE DO QUE EM 'MODEL.modulos').
-     ESSECIALMENTE, SE O MODULO ESTÁ NA LISTA, É PQ JÁ FOI OU ESTÁ SENDO ASSISTIDO.
-
- **/
 public class MyPathsAdd {
-    private String pathID;
-    private String title;
-    private String category;
-    private String img;
-    private List<ModuleSeen> moduleSeenList;
+    private HashSet<String> ClassSee;
+    private List<ModuleSeen> moduleSeens;
 
-    public void AddPath (Path newPath){
-        this.pathID = newPath.getId();
-        this.title = newPath.getTitle();
-        this.category = newPath.getCategory();
+    public void MyPathsAddC(int nModules){
+        this.ClassSee = new HashSet<>();
+        this.moduleSeens = new ArrayList<>();
+        for (int i = 0; i < nModules; i++){
+            var newModuleSee = new ModuleSeen();
+            this.moduleSeens.add(newModuleSee);
+        }
     }
 
-    /* ==== Getters & Setters ==== */
-
-    public String getPathID() {
-        return pathID;
+    public void AddSeeClass (boolean X,String IDClass, int indexModule){
+        if (X && !this.moduleSeens.get(indexModule).getClassSeens().isEmpty()){ // Adicionar aula ; modulo está presente
+            System.out.println("CAIU NO IF");
+            this.moduleSeens.get(indexModule).UpdateClassSee(true,IDClass);
+            this.ClassSee.add(IDClass);
+        }
+        else if (X && this.moduleSeens.get(indexModule).getClassSeens().isEmpty()){
+            System.out.println("CAIU NO ELSE");
+            var newModule = new ModuleSeen();
+            newModule.UpdateClassSee(true,IDClass);
+            this.moduleSeens.set(indexModule,newModule);
+            this.ClassSee.add(IDClass);
+        }
+        else if (ClassSee.contains(IDClass) && !X){
+            this.moduleSeens.get(indexModule).UpdateClassSee(false,IDClass);
+            this.ClassSee.remove(IDClass);
+        }
     }
 
-    public void setPathID(String pathID) {
-        this.pathID = pathID;
-    }
 
-    public String getTitle() {
-        return title;
+    public HashSet<String> getClassSee() {
+        return ClassSee;
     }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
-
-    public List<ModuleSeen> getModuleSeenList() {
-        return moduleSeenList;
-    }
-
-    public void setModuleSeenList(List<ModuleSeen> moduleSeenList) {
-        this.moduleSeenList = moduleSeenList;
+    public List<ModuleSeen> getModuleSeens() {
+        return moduleSeens;
     }
 }
+
+

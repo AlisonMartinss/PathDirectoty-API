@@ -19,9 +19,9 @@ import org.springframework.stereotype.Service;
  - DefaultExplorer: Criar path.
  - PathUpdate: Atualiza o Path.
  - PathDelete: Deleta Path.
- - UpadateNewModule: Adiciona um novo modulo.
- - UpdateModule: Atualiza o modulo já existente.
- - DeleteModule: Deleta modulo
+ - UpadateNewModule: Adiciona um novo moduloCreate.
+ - UpdateModule: Atualiza o moduloCreate já existente.
+ - DeleteModule: Deleta moduloCreate
  - UpadateNewClass: Adiciona nova aula.
  - UpdateClassUnic: Atualiza uma aula.
  - GetProfileInfo: Obtem informações mais recentes de determinado user.
@@ -79,7 +79,7 @@ public class AuthorPath {
 
      public void DeleteModule(ModuloUpdateDTO pathUpdate){
          Path pathList = pathRepositoy.findPath(pathUpdate.PathID());
-         pathList.getModulos().remove(pathUpdate.indexMoudulo());
+         pathList.deleteModule(pathUpdate.indexMoudulo());
          pathRepositoy.save(pathList);
      }
 
@@ -89,10 +89,9 @@ public class AuthorPath {
 
          Path pathList = pathRepositoy.findPath(classUpdate.id());
 
-         var newClass = new Aulas();
-         newClass.ClassUpdate(classUpdate.threePath());
-
-         pathList.getModulos().get(classUpdate.indexModule()).getModulocontent().add(newClass);
+         pathList.getModulos().get(classUpdate.indexModule()).UpdateNewClass(classUpdate.threePath());
+         var recentClass = pathList.getModulos().get(classUpdate.indexModule()).getModulocontent().get(pathList.getModulos().get(classUpdate.indexModule()).getModulocontent().size()-1);
+         pathList.UpdatenClass(true,recentClass.getID());
          pathRepositoy.save(pathList);
      }
 
@@ -109,7 +108,9 @@ public class AuthorPath {
      public void DeleteClassUnic(ClassUpdate classUpdate){
          Path pathList = pathRepositoy.findPath(classUpdate.id());
 
-         pathList.getModulos().get(classUpdate.indexModule()).getModulocontent().remove(classUpdate.indexClass());
+         var modulo = pathList.getModulos().get(classUpdate.indexModule());
+         pathList.UpdatenClass(false,modulo.getModulocontent().get(classUpdate.indexClass()).getID());
+         modulo.DeleteClass(classUpdate.indexClass());
          pathRepositoy.save(pathList);
      }
 

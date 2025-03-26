@@ -1,7 +1,8 @@
 package PathCarrer.API.Model.User;
 
-import java.util.List;
- /**
+import java.util.HashSet;
+
+/**
 
  MOTIVAÇÃO: SABER QUAIS MODULOS/AULAS JÁ FORAM ASSISTIDAS. ESSENCIALMENTE É UMA
  LISTA DE UM MODEL DE MODULOS.(MODEL DE MODULO DIFERENTE DO QUE EM 'MODEL.modulos')
@@ -12,6 +13,25 @@ import java.util.List;
  **/
 
 public class ModuleSeen {
-    String name;
-    List<ClassSeen> classSeens;
+
+    private HashSet<String> classSeens;
+
+    public ModuleSeen() {
+        this.classSeens = new HashSet<>();
+    }
+
+    public void UpdateClassSee(boolean X , String classTitle){
+        if (X){
+            classSeens.add(classTitle);
+        }
+        else if (classSeens.contains(classTitle)){
+            this.classSeens.remove(classTitle);
+        }
+    }
+
+    // ==== Getters & Setters ==== //
+
+    public HashSet<String> getClassSeens() {
+        return classSeens;
+    }
 }

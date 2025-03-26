@@ -3,6 +3,7 @@ package PathCarrer.API.Service.userProfile;
 
 import PathCarrer.API.DTO.GetsPathByUserDTO.AddPath;
 import PathCarrer.API.DTO.GetsPathByUserDTO.PathGetDTO;
+import PathCarrer.API.DTO.Update.AddSeeClassDTO;
 import PathCarrer.API.DTO.UsersDTO.LobyDTO;
 import PathCarrer.API.DTO.UsersDTO.UpdateProfileName;
 import PathCarrer.API.DTO.UsersDTO.UserEasyAspects;
@@ -19,7 +20,7 @@ import java.util.Objects;
  *   MOTIVAÇÃO: CLASSE DESTIANADA A FAZER AS OPERAÇÕES QUE TANGEM A RELAÇÃO USUARIO E SUA CONTA.
  *
  *   - Loby: Trazer a tona as informções a respeito da sua conta.
- *   - AddPath: Adiciona Path.
+ *   - AddPathID: Adiciona Path.
  *   - RemovePath: Remove Path da lista de path do usuario.
  *   - GetPath: Traz informações sobre o path quando selecionado.
  *   - NewName: Atualiza nome de usuario.
@@ -41,33 +42,29 @@ public class UserProfile {
 
     public LobyDTO Loby(String userName){
         var user = userRepository.findByuserName(userName);
-        for (int i = 0; i < user.getMyPaths().size(); i++){
-            if (pathRepository.findPath(user.getMyPaths().get(i).getPathID()) == null){
-                user.getMyPaths().remove(i);
+
+        for (String chave : user.getMyPaths().keySet()) {
+            if (pathRepository.findPath(chave) == null){
+                user.getMyPaths().remove(chave);
             }
         }
+
         userRepository.save(user);
         return new LobyDTO(user);
     }
 
     public void AddPath (AddPath AddPath){
         var user = userRepository.findByuserName(AddPath.userName());
-        var Path = pathRepository.findPath(AddPath.PathID());
-        var newPath = new MyPathsAdd();
-        newPath.AddPath(Path);
-        user.AddMyPaths(newPath);
+        var path = pathRepository.findPath(AddPath.PathID());
+        user.AddMyPaths(path);
         userRepository.save(user);
     }
 
     public void RemovePath (AddPath AddPath){
         var User  = userRepository.findByuserName(AddPath.userName());
-        for (int i = 0; i < User.getMyPaths().size(); i++){
-            if (Objects.equals(User.getMyPaths().get(i).getPathID(), AddPath.PathID())){
-                User.getMyPaths().remove(i);
-                userRepository.save(User);
-                break;
-            }
-        }
+        User.getMyPaths().remove(AddPath.PathID());
+        userRepository.save(User);
+
     }
 
     public PathGetDTO GetPath (String pathID){
@@ -116,9 +113,20 @@ public class UserProfile {
 
     public void DeleteProfile(Password password) {
         var User = userRepository.findByuserName(password.userName());
-
         if (passwordEncoder.matches(password.curretPassword(),User.getPassword())){
             userRepository.delete(User);
         }
+    }
+
+    public void AddSeeClass (AddSeeClassDTO addSeeClassDTO){
+       var User = userRepository.findByuserName(addSeeClassDTO.UserName());
+       User.getMyPaths().get(addSeeClassDTO.PathID()).AddSeeClass(true,addSeeClassDTO.IDclass(),addSeeClassDTO.indexModule());
+       userRepository.save(User);
+    }
+
+    public void RemoveSeeClass (AddSeeClassDTO addSeeClassDTO){
+        var User = userRepository.findByuserName(addSeeClassDTO.UserName());
+        User.getMyPaths().get(addSeeClassDTO.PathID()).AddSeeClass(false,addSeeClassDTO.IDclass(),addSeeClassDTO.indexModule());
+        userRepository.save(User);
     }
 }

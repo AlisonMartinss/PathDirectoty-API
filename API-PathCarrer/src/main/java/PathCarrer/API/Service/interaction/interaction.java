@@ -19,13 +19,15 @@ public class interaction {
         //verificação
         var Path = pathRepository.findPath(interactionDTO.PathID());
         var User = userRepository.findByuserName(interactionDTO.userID());
-        Path.postComment(User.getWorldID().toString(),interactionDTO.comment(),interactionDTO.address(),User.getPictureProfile(),User.getUserName());
+        var modulo = Path.getModulos().get(interactionDTO.address().get(0));
+        modulo.postComment(User.getWorldID().toString(),interactionDTO.comment(),interactionDTO.address());
         pathRepository.save(Path);
     }
     public void DeleteComment (InteractionDTO interactionDTO){
         //verificação
         var Path = pathRepository.findPath(interactionDTO.PathID());
-        Path.DeleteComment(interactionDTO.address());
+        var modulo = Path.getModulos().get(interactionDTO.address().get(0));
+        modulo.DeleteComment(interactionDTO.address());
         pathRepository.save(Path);
     }
 

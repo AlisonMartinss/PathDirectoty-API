@@ -1,6 +1,7 @@
 package PathCarrer.API.Controller;
 
 import PathCarrer.API.DTO.GetsPathByUserDTO.AddPath;
+import PathCarrer.API.DTO.Update.AddSeeClassDTO;
 import PathCarrer.API.DTO.UsersDTO.UpdateProfileName;
 import PathCarrer.API.DTO.UsersDTO.UserEasyAspects;
 import PathCarrer.API.DTO.UsersDTO.userDTO;
@@ -24,7 +25,7 @@ public class UserController {
     }
 
 
-    @PostMapping("/AddPath")
+    @PostMapping("/AddPathID")
     @Transactional
     public ResponseEntity AddPath (@RequestBody AddPath AddPath){
         userProfile.AddPath(AddPath);
@@ -75,6 +76,19 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/AddSeeClass")
+    @Transactional
+    public ResponseEntity AddSeeClass (@RequestBody AddSeeClassDTO addSeeClassDTO){
+        userProfile.AddSeeClass(addSeeClassDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/RemoveSeeClass")
+    @Transactional
+    public ResponseEntity RemoveSeeClass (@RequestBody AddSeeClassDTO addSeeClassDTO){
+        userProfile.RemoveSeeClass(addSeeClassDTO);
+        return ResponseEntity.ok().build();
+    }
 
 
 

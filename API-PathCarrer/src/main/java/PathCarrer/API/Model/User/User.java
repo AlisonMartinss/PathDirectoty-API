@@ -1,6 +1,6 @@
 package PathCarrer.API.Model.User;
 
-import PathCarrer.API.DTO.UsersDTO.userDTO;
+import PathCarrer.API.Model.Path.Path;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -10,8 +10,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 @Document(collection = "Users")
@@ -19,9 +19,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class User implements UserDetails {
-
-
-
 
     @Id
     private ObjectId worldID;
@@ -41,7 +38,7 @@ public class User implements UserDetails {
 
     private List<insignia> InsigniaStorage;
 
-    private List<MyPathsAdd> myPaths;
+    private HashMap<String,MyPathsAdd> myPaths;
 
     private List<messages> Messages;
 
@@ -49,11 +46,16 @@ public class User implements UserDetails {
     public User(String userName, String password) {
         this.userName = userName;
         this.password = password;
-        this.myPaths = new ArrayList<>();
+        this.myPaths = new HashMap<>();
+    }
+
+    public void AddMyPaths(Path newPath) {
+        var newAddPath = new MyPathsAdd();
+        newAddPath.MyPathsAddC(newPath.getModulos().size());
+        this.myPaths.put(newPath.getId(),newAddPath);
     }
 
     /* ===== Getters & Setters ====== */
-
 
     public void setUserName(String userName) {
         this.userName = userName;
@@ -88,36 +90,20 @@ public class User implements UserDetails {
         return InsigniaON;
     }
 
-    public void setInsigniaON(List<insignia> insigniaON) {
-        InsigniaON = insigniaON;
-    }
-
     public List<insignia> getInsigniaStorage() {
         return InsigniaStorage;
-    }
-
-    public void setInsigniaStorage(List<insignia> insigniaStorage) {
-        InsigniaStorage = insigniaStorage;
     }
 
     public String getUserName() {
         return userName;
     }
 
-    public List<MyPathsAdd> getMyPaths() {
+    public HashMap<String,MyPathsAdd> getMyPaths() {
         return myPaths;
-    }
-
-    public void AddMyPaths(MyPathsAdd newPath) {
-        this.myPaths.add(newPath);
     }
 
     public List<messages> getMessages() {
         return Messages;
-    }
-
-    public void setMessages(List<messages> messages) {
-        Messages = messages;
     }
 
     public String getDesc() {
@@ -127,6 +113,8 @@ public class User implements UserDetails {
     public void setDesc(String desc) {
         Desc = desc;
     }
+
+
 
     /* ===== UserDetails ==== */
 
