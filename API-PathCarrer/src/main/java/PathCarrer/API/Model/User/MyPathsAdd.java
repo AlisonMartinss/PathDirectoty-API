@@ -17,12 +17,10 @@ public class MyPathsAdd {
 
     public void AddSeeClass (boolean X,String IDClass, int indexModule){
         if (X && !this.moduleSeens.get(indexModule).getClassSeens().isEmpty()){ // Adicionar aula ; modulo está presente
-            System.out.println("CAIU NO IF");
             this.moduleSeens.get(indexModule).UpdateClassSee(true,IDClass);
             this.ClassSee.add(IDClass);
         }
         else if (X && this.moduleSeens.get(indexModule).getClassSeens().isEmpty()){
-            System.out.println("CAIU NO ELSE");
             var newModule = new ModuleSeen();
             newModule.UpdateClassSee(true,IDClass);
             this.moduleSeens.set(indexModule,newModule);

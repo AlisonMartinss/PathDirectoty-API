@@ -39,7 +39,7 @@ public class AuthorPath {
 
         var novo = new Path();
         var User = userRepository.findByuserName(pathDTO.authorID());
-        novo.CreateNewPath(pathDTO,User.getWorldID());
+        novo.CreateNewPath(pathDTO,User.getWorldID().toString());
 
         pathRepositoy.save(novo);
     }

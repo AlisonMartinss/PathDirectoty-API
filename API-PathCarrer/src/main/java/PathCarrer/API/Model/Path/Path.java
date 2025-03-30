@@ -24,7 +24,7 @@ public class Path {
 
     private  boolean active;
 
-    private ObjectId idAuthor;
+    private String idAuthor;
 
     private  String title;
 
@@ -47,7 +47,7 @@ public class Path {
     private List <Comment> forum;
 
 
-    public void CreateNewPath(PathDTO JSON,ObjectId worldID) {
+    public void CreateNewPath(PathDTO JSON,String worldID) {
         this.idAuthor = worldID;
         this.title = JSON.onePathDTO().title();
         this.category = JSON.onePathDTO().category();
@@ -185,7 +185,7 @@ public class Path {
         return this.comments;
     }
 
-    public ObjectId getIdAuthor() {
+    public String getIdAuthor() {
         return idAuthor;
     }
 

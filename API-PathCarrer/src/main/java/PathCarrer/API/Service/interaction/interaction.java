@@ -1,6 +1,7 @@
 package PathCarrer.API.Service.interaction;
 
 import PathCarrer.API.DTO.InteractionsDTO.InteractionDTO;
+import PathCarrer.API.Model.Path.Comments.Comment;
 import PathCarrer.API.Repository.PathRepository;
 import PathCarrer.API.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,17 +19,19 @@ public class interaction {
     public void PostComment (InteractionDTO interactionDTO){
         //verificação
         var Path = pathRepository.findPath(interactionDTO.PathID());
-        var User = userRepository.findByuserName(interactionDTO.userID());
-        var modulo = Path.getModulos().get(interactionDTO.address().get(0));
-        modulo.postComment(User.getWorldID().toString(),interactionDTO.comment(),interactionDTO.address());
+        var User = userRepository.findByuserName(interactionDTO.userName());
+        var modulo = Path.getModulos().get(interactionDTO.indexModule());
+        modulo.postComment(interactionDTO.Gen(),interactionDTO.fatherID(),interactionDTO.comment(),User.getWorldID());
         pathRepository.save(Path);
     }
-    public void DeleteComment (InteractionDTO interactionDTO){
+    public String DeleteComment (InteractionDTO interactionDTO){
         //verificação
         var Path = pathRepository.findPath(interactionDTO.PathID());
-        var modulo = Path.getModulos().get(interactionDTO.address().get(0));
-        modulo.DeleteComment(interactionDTO.address());
+        var modulo = Path.getModulos().get(interactionDTO.indexModule());
+        String retorno =  modulo.DeleteComment(interactionDTO.Gen(),interactionDTO.fatherID(),interactionDTO.commentID());
         pathRepository.save(Path);
+
+        return  retorno;
     }
 
 

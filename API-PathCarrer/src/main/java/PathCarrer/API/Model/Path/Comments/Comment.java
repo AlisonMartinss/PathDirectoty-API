@@ -1,50 +1,44 @@
 package PathCarrer.API.Model.Path.Comments;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 public class Comment {
 
-    private String worldID;
+    private String fatherID;
+    private String ID;
+    private String userWordID;
     private String comment;
-    private List<Integer> address;
-    private List<Comment> answers;
 
+    private int gen;
 
-    public Comment(String worldID, String comment, List<Integer> address) {
-        this.worldID = worldID;
+    public void CommentBody(String comment, String fatherID, String userWordID, int genComment) {
         this.comment = comment;
-        this.answers = new ArrayList<>();
-        this.address = address;
-    }
-
-
-    public void AnswerAdd (Comment comment){
-        this.answers.add(comment);
+        this.fatherID = fatherID;
+        this.userWordID = userWordID;
+        this.ID = ((userWordID + LocalDateTime.now() + comment.substring(0,5)).replace(".",""));
+        this.gen = genComment;
     }
 
     // ==== Getters & Setters ==== //
 
 
+    public String getFatherID() {
+        return fatherID;
+    }
 
+    public String getID() {
+        return ID;
+    }
 
-    public String getWorldIDDesvio() {
-        return worldID;
+    public String getUserWordID() {
+        return userWordID;
     }
 
     public String getComment() {
         return comment;
     }
 
-    public List<Integer> getAddress() {
-        return address;
-    }
-
-    public void setAddress(List<Integer> address) {
-        this.address = address;
-    }
-
-    public List<Comment> getAnswers() {
-        return answers;
+    public int getGen() {
+        return gen;
     }
 }

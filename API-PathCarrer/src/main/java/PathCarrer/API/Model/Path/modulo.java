@@ -2,12 +2,16 @@ package PathCarrer.API.Model.Path;
 
 import PathCarrer.API.DTO.CreatePathStep.threePath;
 import PathCarrer.API.Model.Path.Comments.Comment;
+import PathCarrer.API.Model.Path.Comments.ZComments;
+import PathCarrer.API.Model.Response;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -21,7 +25,7 @@ public class modulo {
     private String description;
     private List <Aulas> modulocontent;
     private HashSet<String> ClassPresent;
-    private List <Comment> comments;
+    private List<ZComments> comments;
     private int qtdAulasModulo;
 
     public void moduloCreate(String name, String  description, List<threePath> modulocontent) {
@@ -40,6 +44,9 @@ public class modulo {
 
         this.qtdAulasModulo = fillSet(modulocontent,this.modulocontent);
         this.comments = new ArrayList<>();
+        var ForumPostGen = new ZComments();
+        ForumPostGen.ZCommentsBurn("forumPost");
+        this.comments.add(ForumPostGen);
     }
 
     private int fillSet(List<threePath> ClassListJSON, List<Aulas> List) {
@@ -69,65 +76,67 @@ public class modulo {
 
 
 
-    public  void postComment (String wordID, String comment, List<Integer> address){
-
-        Funcional:
-
-        if (!(address.size() > 1)){ // Siguinifica que será postado no forum.
-            List<Integer> newAddres = List.of(address.get(0),this.comments.size());
-            var newComment = new Comment(wordID,comment,newAddres);
-            this.comments.add(newComment);
+    public  void postComment (int gen,String fatherID,String commentCore,String UserID){
+        if (gen == 0){
+            var newComment = new Comment();
+            newComment.CommentBody(commentCore,"commnetONforum0", UserID, 0);
+            this.comments.get(gen).GetFatherList().get("forumPost").put(newComment.getID(),newComment);
         }
         else {
-            var commentX = this.comments.get(address.get(1));
-            int dimension = 0;
-
-            for (int i = 2; i < address.size(); i++) {
-                commentX = commentX.getAnswers().get(address.get(i));
+            var newComment = new Comment();
+            newComment.CommentBody(commentCore,fatherID,UserID,gen);
+            try {
+                this.comments.get(gen).GetFatherList().get(fatherID).put(newComment.getID(),newComment);
             }
-            if (!commentX.getAnswers().isEmpty()){
-                dimension = commentX.getAnswers().size();
+            catch (IndexOutOfBoundsException exception) {
+               var newGen = new ZComments();
+               newGen.ZCommentsBurn(fatherID);
+               this.comments.add(newGen);
+               this.comments.get(gen).GetFatherList().get(fatherID).put(newComment.getID(),newComment);
             }
-            address.add(dimension);
-            var newComment = new Comment(wordID, comment, address);
-            commentX.AnswerAdd(newComment);
         }
     }
 
-    public  void DeleteComment (List<Integer> address){
-
-        if (!(address.size() > 2)){
-            var commentX = this.comments;
-            commentX.remove((int) address.get(1));
-            if (!(commentX.size() == address.get(1)) && !(commentX.isEmpty())){
-                updateAdrresCommetns(commentX,address.get(0));
-            }
+    public  String DeleteComment (int gen,String fatherID,String commentID){
+        if (gen == 0){
+           // this.comments.get(1).GetFatherList().get(commentID).clear();
+            this.comments.get(gen).GetFatherList().get("forumPost").remove(commentID);
+            return "Comentario excluido com Sucesso [POST]";
         }
         else {
-            var commentX = this.comments.get(address.get(1));
-            for (int i = 2; i < address.size()-1; i++) {
-                commentX = commentX.getAnswers().get(address.get(i)); // objeto pai
-            }
+            try {
+              //  this.comments.get(gen+1).GetFatherList().get(commentID).clear();
+                this.comments.get(gen).GetFatherList().get(fatherID).remove(commentID);
 
-            int a = address.get(address.size()-1); // cordenada do proprio
-            commentX.getAnswers().remove(a);
-
-            if (!(commentX.getAnswers().size() == a) && !(commentX.getAnswers().isEmpty())){
-                updateAdrresCommetns(commentX.getAnswers(),a);
+                return "Comentario excluido com Sucesso [!POST]";
+            } catch (IndexOutOfBoundsException exception) {
+               return "Erro: Índice inválido no array." ;
             }
         }
     }
 
-    private void updateAdrresCommetns(List<Comment> commentlist,int indexY){
-        // Se ta aqui eu se que: não é o ultimo nem o unico
-        for(int i = (indexY); i < commentlist.size(); i++){
-            var neighbor  = commentlist.get(i); // pegou elemento
-            var sunAddres = neighbor.getAddress(); // List
-            sunAddres.set(sunAddres.size()-1,i); // redefine endereço
-            neighbor.setAddress(sunAddres); // seta endereço
+    public Response<HashMap<String,Comment>> ElementCommentInfo (int gen, String CommentID){
+        try {
+         var result = this.comments.get(gen).GetFatherList().get(CommentID);
+         return  new Response<>(result);
+        }
+        catch (NullPointerException e){
+            return  new Response<>("Não existem respostas para esse comentário");
         }
     }
 
+    @Override
+    public String toString() {
+        return "modulo{" +
+                "ID='" + ID + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", modulocontent=" + modulocontent +
+                ", ClassPresent=" + ClassPresent +
+                ", comments=" + comments +
+                ", qtdAulasModulo=" + qtdAulasModulo +
+                '}';
+    }
 
     //* ===== Getters & Setters ====== *//
 
@@ -164,7 +173,7 @@ public class modulo {
         this.modulocontent = modulocontent;
     }
 
-    public List<Comment> getComments() {
+    public List<ZComments> getComments() {
         return comments;
     }
 

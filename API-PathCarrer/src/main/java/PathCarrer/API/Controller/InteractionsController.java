@@ -26,8 +26,7 @@ public class InteractionsController {
     @PostMapping("/DeleteComment")
     @Transactional
     public ResponseEntity DeleteComment (@RequestBody InteractionDTO interactionDTO){
-        interaction.DeleteComment(interactionDTO);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(interaction.DeleteComment(interactionDTO));
     }
 
 

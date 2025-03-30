@@ -21,7 +21,7 @@ import java.util.List;
 public class User implements UserDetails {
 
     @Id
-    private ObjectId worldID;
+    private String worldID;
 
     @Indexed(unique = true)
     private String userName;
@@ -61,7 +61,7 @@ public class User implements UserDetails {
         this.userName = userName;
     }
 
-    public ObjectId getWorldID() {
+    public String getWorldID() {
         return worldID;
     }
 

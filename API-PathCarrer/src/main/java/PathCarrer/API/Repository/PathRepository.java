@@ -2,6 +2,7 @@ package PathCarrer.API.Repository;
 
 import PathCarrer.API.Model.ExplorerModels.Explorer;
 import PathCarrer.API.Model.Path.Path;
+import PathCarrer.API.Model.Path.modulo;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Service;
@@ -24,5 +25,9 @@ public interface PathRepository extends MongoRepository<Path,String> {
 
     @Query(value = "{'category':?0}")
     List<Explorer> CategoryExplorer(String category);
+
+
+    @Query(value = "{'_id': ?0 }", fields = "{'modulos': 1}")
+    List<modulo> ElementCommentInfo (String id);
 
 }
