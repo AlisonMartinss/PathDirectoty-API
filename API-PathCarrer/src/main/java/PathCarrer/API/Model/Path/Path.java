@@ -5,7 +5,6 @@ import PathCarrer.API.DTO.Update.ModuloUpdateDTO;
 import PathCarrer.API.DTO.Update.PathUpdate;
 import PathCarrer.API.Model.Path.Comments.Comment;
 import lombok.*;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -23,6 +22,10 @@ public class Path {
     private String id;
 
     private  boolean active;
+
+    private int alredyAdd;
+
+    private int everAdd;
 
     private String idAuthor;
 
@@ -59,6 +62,8 @@ public class Path {
         this.forum = new ArrayList<>();
         this.modulos = new ArrayList<>();
         this.ClassPresent = new HashSet<>();
+        this.alredyAdd = 0;
+        this.everAdd = 0;
 
 
         if (!JSON.onePathDTO().tags().isEmpty()){
@@ -150,6 +155,16 @@ public class Path {
         }
     }
 
+    public void UpdatePathCount(boolean x){
+        if (x){
+          this.alredyAdd++;
+          this.everAdd ++;
+        }
+        else {
+            this.alredyAdd--;
+        }
+    }
+
     //* ===== Getters & Setters ====== *//
 
     public String getId() {
@@ -189,6 +204,11 @@ public class Path {
         return idAuthor;
     }
 
+    public int getAlredyAdd() {
+        return alredyAdd;
+    }
 
-
+    public int getEverAdd() {
+        return everAdd;
+    }
 }

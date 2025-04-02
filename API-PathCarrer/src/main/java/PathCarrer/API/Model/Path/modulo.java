@@ -125,18 +125,6 @@ public class modulo {
         }
     }
 
-    @Override
-    public String toString() {
-        return "modulo{" +
-                "ID='" + ID + '\'' +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", modulocontent=" + modulocontent +
-                ", ClassPresent=" + ClassPresent +
-                ", comments=" + comments +
-                ", qtdAulasModulo=" + qtdAulasModulo +
-                '}';
-    }
 
     //* ===== Getters & Setters ====== *//
 

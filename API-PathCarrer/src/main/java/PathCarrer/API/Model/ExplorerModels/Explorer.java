@@ -23,9 +23,12 @@ public class Explorer {
 
     private  String category;
 
+    private  int everAdd;
+
     private List<adjectives> adjectivesElements;
 
     private HashSet<String> ClassPresent;
+
 
     // ==== Getters & Setters ==== //
 
@@ -50,5 +53,9 @@ public class Explorer {
 
     public HashSet<String> getClassPresent() {
         return ClassPresent;
+    }
+
+    public int getEverAdd() {
+        return everAdd;
     }
 }

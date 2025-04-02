@@ -7,14 +7,11 @@ import PathCarrer.API.DTO.Update.AddSeeClassDTO;
 import PathCarrer.API.DTO.UsersDTO.LobyDTO;
 import PathCarrer.API.DTO.UsersDTO.UpdateProfileName;
 import PathCarrer.API.DTO.UsersDTO.UserEasyAspects;
-import PathCarrer.API.Model.User.MyPathsAdd;
 import PathCarrer.API.Repository.PathRepository;
 import PathCarrer.API.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Objects;
 
 /**
  *   MOTIVAÇÃO: CLASSE DESTIANADA A FAZER AS OPERAÇÕES QUE TANGEM A RELAÇÃO USUARIO E SUA CONTA.
@@ -56,15 +53,19 @@ public class UserProfile {
     public void AddPath (AddPath AddPath){
         var user = userRepository.findByuserName(AddPath.userName());
         var path = pathRepository.findPath(AddPath.PathID());
+        path.UpdatePathCount(true);
         user.AddMyPaths(path);
         userRepository.save(user);
+        pathRepository.save(path);
     }
 
     public void RemovePath (AddPath AddPath){
         var User  = userRepository.findByuserName(AddPath.userName());
         User.getMyPaths().remove(AddPath.PathID());
+        var path = pathRepository.findPath(AddPath.PathID());
+        path.UpdatePathCount(false);
         userRepository.save(User);
-
+        pathRepository.save(path);
     }
 
     public PathGetDTO GetPath (String pathID){
