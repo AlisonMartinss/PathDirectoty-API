@@ -9,5 +9,4 @@ public class ApiPathCarrerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ApiPathCarrerApplication.class, args);
 	}
-
 }

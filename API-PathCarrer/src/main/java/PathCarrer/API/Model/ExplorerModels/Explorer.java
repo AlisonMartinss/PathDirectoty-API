@@ -18,15 +18,11 @@ import java.util.List;
 public class Explorer {
     @Id
     private String id;
-
     private  String title;
-
     private  String category;
-
+    private String banner;
     private  int everAdd;
-
     private List<adjectives> adjectivesElements;
-
     private HashSet<String> ClassPresent;
 
 
@@ -57,5 +53,9 @@ public class Explorer {
 
     public int getEverAdd() {
         return everAdd;
+    }
+
+    public String getBanner() {
+        return banner;
     }
 }

@@ -12,7 +12,6 @@ public class ExplorerController {
     @Autowired
     private ExplorerService explorerService;
     @GetMapping()
-    @Transactional
     public ResponseEntity DefaultExplorer(){
         return ResponseEntity.ok(explorerService.DefaultExplorer());
     }

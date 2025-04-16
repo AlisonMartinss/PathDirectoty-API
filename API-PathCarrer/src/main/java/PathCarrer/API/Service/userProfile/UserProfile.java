@@ -5,6 +5,7 @@ import PathCarrer.API.DTO.GetsPathByUserDTO.AddPath;
 import PathCarrer.API.DTO.GetsPathByUserDTO.PathGetDTO;
 import PathCarrer.API.DTO.Update.AddSeeClassDTO;
 import PathCarrer.API.DTO.UsersDTO.LobyDTO;
+import PathCarrer.API.DTO.UsersDTO.NoteDTO;
 import PathCarrer.API.DTO.UsersDTO.UpdateProfileName;
 import PathCarrer.API.DTO.UsersDTO.UserEasyAspects;
 import PathCarrer.API.Repository.PathRepository;
@@ -25,6 +26,10 @@ import org.springframework.stereotype.Service;
  *   - UpdateDesc: Atualiza a descrição.
  *   - NewPassword: Atualzia a senha.
  *   - DeleteProfile: Deleta perfil.
+ *   - AddSeeClass: Certifica que user viu x aula.
+ *   - RemoveSeeClass: Certifica que user desvio a aula.
+ *   - AddNote: Adiciona Nota.
+ *   - RemoveNote: Remove Nota
  *
  **/
 @Service
@@ -115,6 +120,8 @@ public class UserProfile {
     public void DeleteProfile(Password password) {
         var User = userRepository.findByuserName(password.userName());
         if (passwordEncoder.matches(password.curretPassword(),User.getPassword())){
+            var PathByAuthor = pathRepository.findByAuthor(User.getWorldID());
+            pathRepository.deleteAll(PathByAuthor);
             userRepository.delete(User);
         }
     }
@@ -128,6 +135,18 @@ public class UserProfile {
     public void RemoveSeeClass (AddSeeClassDTO addSeeClassDTO){
         var User = userRepository.findByuserName(addSeeClassDTO.UserName());
         User.getMyPaths().get(addSeeClassDTO.PathID()).AddSeeClass(false,addSeeClassDTO.IDclass(),addSeeClassDTO.indexModule());
+        userRepository.save(User);
+    }
+
+    public void AddNote (NoteDTO noteDTO){
+        var User = userRepository.findByuserName(noteDTO.UserName());
+        User.UpdateNewNote(noteDTO.message());
+        userRepository.save(User);
+    }
+
+    public void RemoveNote (NoteDTO noteDTO){
+        var User = userRepository.findByuserName(noteDTO.UserName());
+        User.DeleteNote(noteDTO.key());
         userRepository.save(User);
     }
 }

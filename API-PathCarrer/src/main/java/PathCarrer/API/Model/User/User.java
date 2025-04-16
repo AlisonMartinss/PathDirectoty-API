@@ -2,7 +2,6 @@ package PathCarrer.API.Model.User;
 
 import PathCarrer.API.Model.Path.Path;
 import lombok.*;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -42,6 +41,8 @@ public class User implements UserDetails {
 
     private List<messages> Messages;
 
+    private HashMap<String,Note> notesHashSet;
+
 
     public User(String userName, String password) {
         this.userName = userName;
@@ -53,6 +54,19 @@ public class User implements UserDetails {
         var newAddPath = new MyPathsAdd();
         newAddPath.MyPathsAddC(newPath.getModulos().size());
         this.myPaths.put(newPath.getId(),newAddPath);
+    }
+
+    public void UpdateNewNote(String y) {
+        if (this.notesHashSet == null) {
+            this.notesHashSet = new HashMap<>();
+        }
+        var note = new Note();
+        note.BuildNote(y);
+        this.notesHashSet.put(note.getKey(),note);
+    }
+
+    public void DeleteNote(String key) {
+        this.notesHashSet.remove(key);
     }
 
     /* ===== Getters & Setters ====== */
@@ -114,6 +128,9 @@ public class User implements UserDetails {
         Desc = desc;
     }
 
+    public HashMap<String, Note> getNotesHashSet() {
+        return notesHashSet;
+    }
 
 
     /* ===== UserDetails ==== */
@@ -151,5 +168,4 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 }

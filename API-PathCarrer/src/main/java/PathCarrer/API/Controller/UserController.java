@@ -2,6 +2,7 @@ package PathCarrer.API.Controller;
 
 import PathCarrer.API.DTO.GetsPathByUserDTO.AddPath;
 import PathCarrer.API.DTO.Update.AddSeeClassDTO;
+import PathCarrer.API.DTO.UsersDTO.NoteDTO;
 import PathCarrer.API.DTO.UsersDTO.UpdateProfileName;
 import PathCarrer.API.DTO.UsersDTO.UserEasyAspects;
 import PathCarrer.API.DTO.UsersDTO.userDTO;
@@ -90,8 +91,17 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/AddNote")
+    @Transactional
+    public ResponseEntity AddNote(@RequestBody NoteDTO noteDTO){
+        userProfile.AddNote(noteDTO);
+        return ResponseEntity.ok().build();
+    }
 
-
-
-
+    @PostMapping("/RemoveNote")
+    @Transactional
+    public ResponseEntity RemoveNote (@RequestBody NoteDTO noteDTO){
+        userProfile.RemoveNote(noteDTO);
+        return ResponseEntity.ok().build();
+    }
 }
