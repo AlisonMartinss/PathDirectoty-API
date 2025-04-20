@@ -5,6 +5,8 @@ import PathCarrer.API.DTO.PathDTO;
 import PathCarrer.API.DTO.Update.ClassUpdate;
 import PathCarrer.API.DTO.Update.ModuloUpdateDTO;
 import PathCarrer.API.DTO.Update.PathUpdate;
+import PathCarrer.API.ExeptionsClasses.NotFound;
+import PathCarrer.API.ExeptionsClasses.PathAspectsUnexpected;
 import PathCarrer.API.Model.Path.Aulas;
 import PathCarrer.API.Model.Path.Path;
 import PathCarrer.API.Repository.PathRepository;
@@ -13,19 +15,44 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
-
-  MOTIVAÇÃO: CLASSE DESTIANADA A FAZER AS OPERAÇÕES QUE TANGEM A RELAÇÃO PATH E SEU AUTOR.
-
- - DefaultExplorer: Criar path.
- - PathUpdate: Atualiza o Path.
- - PathDelete: Deleta Path.
- - UpadateNewModule: Adiciona um novo moduloCreate.
- - UpdateModule: Atualiza o moduloCreate já existente.
- - DeleteModule: Deleta moduloCreate
- - UpadateNewClass: Adiciona nova aula.
- - UpdateClassUnic: Atualiza uma aula.
- - GetProfileInfo: Obtem informações mais recentes de determinado user.
-
+ * Classe destinada a realizar operações que tangem a relação entre um Path e seu autor.
+ *
+ * <p>
+ * This class is responsible for handling operations related to a Path and its author.
+ * </p>
+ *
+ * <p><strong>Operações disponíveis / Available operations:</strong></p>
+ *
+ * <ul>
+ *   <li><strong>DefaultExplorer:</strong> Criação de um novo Path. <br>
+ *       Creates a new Path.</li>
+ *   <li><strong>PathUpdate:</strong> Atualiza as informações de um Path. <br>
+ *       Updates the Path information.</li>
+ *   <li><strong>PathDelete:</strong> Remove um Path existente. <br>
+ *       Deletes an existing Path.</li>
+ *   <li><strong>UpdateNewModule:</strong> Adiciona um novo módulo ao Path. <br>
+ *       Adds a new module to the Path.</li>
+ *   <li><strong>UpdateModule:</strong> Atualiza um módulo existente. <br>
+ *       Updates an existing module.</li>
+ *   <li><strong>DeleteModule:</strong> Remove um módulo do Path. <br>
+ *       Deletes a module from the Path.</li>
+ *   <li><strong>UpdateNewClass:</strong> Adiciona uma nova aula ao módulo. <br>
+ *       Adds a new class to the module.</li>
+ *   <li><strong>UpdateClassUnic:</strong> Atualiza os dados de uma aula específica. <br>
+ *       Updates a specific class.</li>
+ *   <li><strong>GetProfileInfo:</strong> Obtém as informações mais recentes de um determinado usuário. <br>
+ *       Retrieves the latest information from a specific user.</li>
+ * </ul>
+ *
+ * <p>
+ * Essa classe centraliza as ações de edição e gerenciamento de Paths,
+ * promovendo consistência e controle sobre o conteúdo educacional produzido por seus autores.
+ * </p>
+ *
+ * <p>
+ * This class centralizes editing and management actions for Paths,
+ * ensuring consistency and control over the educational content produced by its authors.
+ * </p>
  */
 
 @Service
@@ -35,90 +62,135 @@ public class AuthorPath {
     @Autowired
     private UserRepository userRepository;
 
-    public void PathCreate(PathDTO pathDTO){
+    public Path PathCreate(PathDTO pathDTO){
 
         var novo = new Path();
         var User = userRepository.findByuserName(pathDTO.authorID());
-        novo.CreateNewPath(pathDTO,User.getWorldID().toString());
-
-        pathRepositoy.save(novo);
+        if (User != null){
+            try {
+                novo.CreateNewPath(pathDTO, User.getWorldID().toString());
+                pathRepositoy.save(novo);
+                return novo;
+            }catch (NullPointerException erro){
+                throw new NotFound("PathCreate - Erro no Objeto User! " + erro);
+            }
+        }
+        else {
+            throw new NotFound("PathCreate - Usuario não encontrado");
+        }
     }
 
      public void  pathUpdate (PathUpdate pathDTO){
 
-         Path path = pathRepositoy.findPath(pathDTO.PathID());
-         path.UpdatePathStats(pathDTO);
+         var path = pathRepositoy.findPath(pathDTO.PathID());
+         if (path != null){
+             path.UpdatePathStats(pathDTO);
+             pathRepositoy.save(path);
+         }
+         else {throw new NotFound("pathUpdate - Path não encontrado");}
 
-         pathRepositoy.save(path);
      }
 
      public void  pathDelete (PathUpdate pathDTO){
         if (pathRepositoy.findPath(pathDTO.PathID()) != null){
             pathRepositoy.deleteById(pathDTO.PathID());
          }
+        else { throw new NotFound("pathDelete - Path não encontrado");}
      }
-
 
      public void UpadateNewModule(ModuloUpdateDTO pathUpdate){
 
         Path pathList = pathRepositoy.findPath(pathUpdate.PathID());
-        pathList.AddNewModulo(pathUpdate);
+        if (pathList != null){
+            try {
+            pathList.AddNewModulo(pathUpdate);
+            pathRepositoy.save(pathList);
+            }catch (NullPointerException erro){
+                throw new PathAspectsUnexpected("UpadateNewModule - Falha no sucesso do metodo AddNewModulo");
+            }
+        }
+        else  {throw new NotFound("UpadateNewModule - Path não encontrado");}
 
-        pathRepositoy.save(pathList);
     }
-
 
     public void UpdateModule(ModuloUpdateDTO pathUpdate){
 
         Path pathList = pathRepositoy.findPath(pathUpdate.PathID());
-        pathList.getModulos().get(pathUpdate.indexMoudulo()).setName(pathUpdate.title());
-        pathList.getModulos().get(pathUpdate.indexMoudulo()).setDescription(pathUpdate.desc());
-
-        pathRepositoy.save(pathList);
+        if (pathList != null){
+            try {
+                pathList.getModulos().get(pathUpdate.indexMoudulo()).setName(pathUpdate.title());
+                pathList.getModulos().get(pathUpdate.indexMoudulo()).setDescription(pathUpdate.desc());
+                pathRepositoy.save(pathList);
+            } catch (NullPointerException erro) {
+                throw new PathAspectsUnexpected("UpdateModule - Falha ao encontrar modulo em meio ao Path");
+            }
+        }
+        else {throw new NotFound("UpdateModule - Path não encontrado");}
     }
 
      public void DeleteModule(ModuloUpdateDTO pathUpdate){
          Path pathList = pathRepositoy.findPath(pathUpdate.PathID());
-         pathList.deleteModule(pathUpdate.indexMoudulo());
-         pathRepositoy.save(pathList);
+         if (pathList != null){
+             try {
+                 pathList.deleteModule(pathUpdate.indexMoudulo());
+                 pathRepositoy.save(pathList);
+             }catch (NullPointerException erro){
+                 throw new PathAspectsUnexpected("DeleteModule - Falha ao encontrar modulo em meio ao Path");
+             }
+
+         }
+         else {throw new NotFound("DeleteModule - Path não encontrado");}
      }
-
-
 
      public void UpadateNewClass(ClassUpdate classUpdate){
-
          Path pathList = pathRepositoy.findPath(classUpdate.id());
-
-         pathList.getModulos().get(classUpdate.indexModule()).UpdateNewClass(classUpdate.threePath());
-         var recentClass = pathList.getModulos().get(classUpdate.indexModule()).getModulocontent().get(pathList.getModulos().get(classUpdate.indexModule()).getModulocontent().size()-1);
-         pathList.UpdatenClass(true,recentClass.getID());
-         pathRepositoy.save(pathList);
+         if (pathList != null){
+             try {
+                 pathList.getModulos().get(classUpdate.indexModule()).UpdateNewClass(classUpdate.threePath());
+                 var recentClass = pathList.getModulos().get(classUpdate.indexModule()).getModulocontent().get(pathList.getModulos().get(classUpdate.indexModule()).getModulocontent().size()-1);
+                 pathList.UpdatenClass(true,recentClass.getID());
+                 pathRepositoy.save(pathList);
+             }catch (NullPointerException erro){
+                 throw new PathAspectsUnexpected("UpadateNewClass - Falha ao encontrar modulo em meio ao Path");
+             }
+         }
+         else {throw new NotFound("UpadateNewClass - Path não encontrado");}
      }
-
 
     public void UpdateClassUnic(ClassUpdate classUpdate){
         Path pathList = pathRepositoy.findPath(classUpdate.id());
+        if (pathList != null){
+            var newClass = new Aulas();
+            newClass.ClassUpdate(classUpdate.threePath());
+            try {
+                pathList.getModulos().get(classUpdate.indexModule()).getModulocontent().set(classUpdate.indexClass(),newClass);
+                pathRepositoy.save(pathList);
+            }catch (NullPointerException erro) {
+                throw new PathAspectsUnexpected("UpdateClassUnic - Falha em econtrar modulo ou aula");
+            }
 
-        var newClass = new Aulas();
-        newClass.ClassUpdate(classUpdate.threePath());
-
-        pathList.getModulos().get(classUpdate.indexModule()).getModulocontent().set(classUpdate.indexClass(),newClass);
-        pathRepositoy.save(pathList);
+        } else {throw new NotFound("UpdateClassUnic - Path não encontrado");}
     }
+
      public void DeleteClassUnic(ClassUpdate classUpdate){
          Path pathList = pathRepositoy.findPath(classUpdate.id());
+         if (pathList != null){
+         try {
+             var modulo = pathList.getModulos().get(classUpdate.indexModule());
+             pathList.UpdatenClass(false,modulo.getModulocontent().get(classUpdate.indexClass()).getID());
+             modulo.DeleteClass(classUpdate.indexClass());
+             pathRepositoy.save(pathList);
+         }catch (NullPointerException erro){
+             throw new PathAspectsUnexpected("DeleteClassUnic - Falha em econtrar modulo ou aula");
+         }
 
-         var modulo = pathList.getModulos().get(classUpdate.indexModule());
-         pathList.UpdatenClass(false,modulo.getModulocontent().get(classUpdate.indexClass()).getID());
-         modulo.DeleteClass(classUpdate.indexClass());
-         pathRepositoy.save(pathList);
+         }else {throw new NotFound("DeleteClassUnic - Path não encontrado");}
      }
 
     public ParallelDataDTO GetProfileInfo (String worldID){
         var User = userRepository.findByWorldID(worldID);
-        return new ParallelDataDTO(User);
+        if (User != null) {
+            return new ParallelDataDTO(User);
+        }else {throw new NotFound("GetProfileInfo - Autor/Usuario não encontrado");}
     }
-
-
-
 }

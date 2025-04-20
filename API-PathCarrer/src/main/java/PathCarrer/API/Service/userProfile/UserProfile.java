@@ -8,6 +8,10 @@ import PathCarrer.API.DTO.UsersDTO.LobyDTO;
 import PathCarrer.API.DTO.UsersDTO.NoteDTO;
 import PathCarrer.API.DTO.UsersDTO.UpdateProfileName;
 import PathCarrer.API.DTO.UsersDTO.UserEasyAspects;
+import PathCarrer.API.ExeptionsClasses.GenericErro;
+import PathCarrer.API.ExeptionsClasses.InconsistentParameter;
+import PathCarrer.API.ExeptionsClasses.NotFound;
+import PathCarrer.API.ExeptionsClasses.UserAspectsUnexpected;
 import PathCarrer.API.Repository.PathRepository;
 import PathCarrer.API.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,23 +19,34 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
- *   MOTIVAÇÃO: CLASSE DESTIANADA A FAZER AS OPERAÇÕES QUE TANGEM A RELAÇÃO USUARIO E SUA CONTA.
+ * Classe responsável por gerenciar as operações relacionadas ao usuário e sua conta.
+ * <br>
+ * Class responsible for managing operations related to the user and their account.
  *
- *   - Loby: Trazer a tona as informções a respeito da sua conta.
- *   - AddPathID: Adiciona Path.
- *   - RemovePath: Remove Path da lista de path do usuario.
- *   - GetPath: Traz informações sobre o path quando selecionado.
- *   - NewName: Atualiza nome de usuario.
- *   - UpdatePictureProfile: Atualização do foto de perfil e/ou banner.
- *   - UpdateDesc: Atualiza a descrição.
- *   - NewPassword: Atualzia a senha.
- *   - DeleteProfile: Deleta perfil.
- *   - AddSeeClass: Certifica que user viu x aula.
- *   - RemoveSeeClass: Certifica que user desvio a aula.
- *   - AddNote: Adiciona Nota.
- *   - RemoveNote: Remove Nota
+ * <p><strong>Funções principais / Main functions:</strong></p>
  *
- **/
+ * <ul>
+ *   <li><strong>loby:</strong> Retorna as informações da conta do usuário. <br> Returns the user's account information.</li>
+ *   <li><strong>addPathID:</strong> Adiciona um novo path à lista do usuário. <br> Adds a new path to the user's list.</li>
+ *   <li><strong>removePath:</strong> Remove um path da lista do usuário. <br> Removes a path from the user's list.</li>
+ *   <li><strong>getPath:</strong> Retorna informações detalhadas de um path selecionado. <br> Returns detailed info of a selected path.</li>
+ *   <li><strong>newName:</strong> Atualiza o nome de usuário. <br> Updates the user's name.</li>
+ *   <li><strong>updatePictureProfile:</strong> Atualiza a foto de perfil e/ou banner do usuário. <br> Updates the user's profile picture and/or banner.</li>
+ *   <li><strong>updateDesc:</strong> Atualiza a descrição do perfil. <br> Updates the user's profile description.</li>
+ *   <li><strong>newPassword:</strong> Altera a senha da conta. <br> Changes the user's password.</li>
+ *   <li><strong>deleteProfile:</strong> Exclui permanentemente o perfil do usuário. <br> Permanently deletes the user's profile.</li>
+ *   <li><strong>addSeeClass:</strong> Registra que o usuário assistiu determinada aula. <br> Marks that the user has watched a specific class.</li>
+ *   <li><strong>removeSeeClass:</strong> Remove o registro de que o usuário assistiu determinada aula. <br> Unmarks a previously watched class.</li>
+ *   <li><strong>addNote:</strong> Adiciona uma nota ao conteúdo. <br> Adds a note to the content.</li>
+ *   <li><strong>removeNote:</strong> Remove uma nota previamente adicionada. <br> Removes a previously added note.</li>
+ * </ul>
+ *
+ * <p>
+ * Essa classe centraliza as operações de atualização, visualização e controle do perfil do usuário. <br>
+ * This class centralizes all operations for updating, viewing, and managing the user's profile.
+ * </p>
+ */
+
 @Service
 public class UserProfile {
 
@@ -43,45 +58,75 @@ public class UserProfile {
     private PasswordEncoder passwordEncoder;
 
     public LobyDTO Loby(String userName){
-        var user = userRepository.findByuserName(userName);
 
-        for (String chave : user.getMyPaths().keySet()) {
-            if (pathRepository.findPath(chave) == null){
-                user.getMyPaths().remove(chave);
-            }
-        }
+          var User = userRepository.findByuserName(userName);
 
-        userRepository.save(user);
-        return new LobyDTO(user);
+          if (User == null) {
+              throw new NotFound("Loby - Usuario não encontrado!");
+          }
+          for (String chave : User.getMyPaths().keySet()) {
+                if (pathRepository.findPath(chave) == null){
+                    User.getMyPaths().remove(chave);
+                }
+          }
+
+          userRepository.save(User);
+          return new LobyDTO(User);
     }
 
     public void AddPath (AddPath AddPath){
-        var user = userRepository.findByuserName(AddPath.userName());
+        var User = userRepository.findByuserName(AddPath.userName());
+        if (User == null) {
+            throw new NotFound("AddPath - Usuario não encontrado!");
+        }
+
         var path = pathRepository.findPath(AddPath.PathID());
+        if (path == null) {
+            throw new NotFound("AddPath - Path Não Encontrado!");
+        }
+
         path.UpdatePathCount(true);
-        user.AddMyPaths(path);
-        userRepository.save(user);
+        User.AddMyPaths(path);
+        userRepository.save(User);
         pathRepository.save(path);
     }
 
     public void RemovePath (AddPath AddPath){
         var User  = userRepository.findByuserName(AddPath.userName());
+        if (User == null) {
+            throw new NotFound("RemovePath - Usuario não encontrado!");
+        }
         User.getMyPaths().remove(AddPath.PathID());
+
         var path = pathRepository.findPath(AddPath.PathID());
+        if (path == null) {
+            throw new NotFound("RemovePath - Path Não Encontrado!");
+        }
         path.UpdatePathCount(false);
+
         userRepository.save(User);
         pathRepository.save(path);
     }
 
     public PathGetDTO GetPath (String pathID){
         var Path = pathRepository.findPath(pathID);
+        if (Path == null) {
+            throw new NotFound("GetPath - Path Não Encontrado!");
+        }
+
         var Author = userRepository.findByWorldID(Path.getIdAuthor().toString());
+        if (Author == null) {
+            throw new NotFound("GetPath - Author não encontrado!");
+        }
+
         return new PathGetDTO(Path,Author);
     }
 
     public void NewName (UpdateProfileName userDTO){
         var User = userRepository.findByuserName(userDTO.userName());
-        System.out.println(User);
+        if (User == null) {
+            throw new NotFound("NewName - Usuario não encontrado!");
+        }
 
         if (userRepository.findByuserName(userDTO.newUsername()) == null){
             var CopyUser = User;
@@ -90,63 +135,121 @@ public class UserProfile {
             CopyUser.setUserName(userDTO.newUsername());
             userRepository.save(CopyUser);
         }
+        else {
+            throw new GenericErro("NewName - Nome de Usuario não disponivel !");
+        }
     }
 
     public void UpdatePictureProfile(UserEasyAspects UserEasyAspects){
         var User = userRepository.findByuserName(UserEasyAspects.userName());
+        if (User == null) {
+            throw new NotFound("NewName - Usuario não encontrado!");
+        }
+
         if (UserEasyAspects.PictureProfile() != null && !UserEasyAspects.PictureProfile().trim().isEmpty()){
-            User.setPictureProfile(UserEasyAspects.PictureProfile());}
+            User.setPictureProfile(UserEasyAspects.PictureProfile());
+        }
         if (UserEasyAspects.BannerProfile() != null && !UserEasyAspects.BannerProfile().trim().isEmpty()){
             User.setBannerProfile(UserEasyAspects.BannerProfile());
         }
+
         userRepository.save(User);
     }
 
     public void UpdateDesc (UserEasyAspects userEasyAspects){
         var User = userRepository.findByuserName(userEasyAspects.userName());
-        User.setDesc(userEasyAspects.desc());
+        if (User == null) {
+            throw new NotFound("UpdateDesc - Usuario não encontrado!");
+        }
+
+        if (userEasyAspects.desc() != null && !userEasyAspects.desc().trim().isEmpty()){
+            User.setDesc(userEasyAspects.desc());
+        }
+        else {
+            throw new InconsistentParameter("InconsistentParameter/UpdateDesc - Desc");
+        }
         userRepository.save(User);
     }
 
     public void NewPassword (Password password){
         var User = userRepository.findByuserName(password.userName());
+        if (User == null) {
+            throw new NotFound("NewPassword - Usuario não encontrado!");
+        }
 
         if (passwordEncoder.matches(password.curretPassword(),User.getPassword())){
             User.setPassword(passwordEncoder.encode(password.newPassWord()));
             userRepository.save(User);
         }
+        else {
+            throw new InconsistentParameter("InconsistentParameter/NewPassword - currentPassword");
+        }
     }
 
     public void DeleteProfile(Password password) {
         var User = userRepository.findByuserName(password.userName());
+        if (User == null) {
+            throw new NotFound("DeleteProfile - Usuario não encontrado!");
+        }
         if (passwordEncoder.matches(password.curretPassword(),User.getPassword())){
             var PathByAuthor = pathRepository.findByAuthor(User.getWorldID());
-            pathRepository.deleteAll(PathByAuthor);
-            userRepository.delete(User);
+            if (!PathByAuthor.isEmpty()){
+                pathRepository.deleteAll(PathByAuthor);
+                userRepository.delete(User);
+            }
         }
     }
 
     public void AddSeeClass (AddSeeClassDTO addSeeClassDTO){
        var User = userRepository.findByuserName(addSeeClassDTO.UserName());
-       User.getMyPaths().get(addSeeClassDTO.PathID()).AddSeeClass(true,addSeeClassDTO.IDclass(),addSeeClassDTO.indexModule());
-       userRepository.save(User);
+        if (User == null) {
+            throw new NotFound("AddSeeClass - Usuario não encontrado!");
+        }
+        try {
+        User.getMyPaths().get(addSeeClassDTO.PathID()).AddSeeClass(true,addSeeClassDTO.IDclass(),addSeeClassDTO.indexModule());
+        } catch (NullPointerException exception) {
+            throw new UserAspectsUnexpected("AddSeeClass - Erro na tentativa de visualizar Aula!");
+        }
+        userRepository.save(User);
     }
 
     public void RemoveSeeClass (AddSeeClassDTO addSeeClassDTO){
         var User = userRepository.findByuserName(addSeeClassDTO.UserName());
-        User.getMyPaths().get(addSeeClassDTO.PathID()).AddSeeClass(false,addSeeClassDTO.IDclass(),addSeeClassDTO.indexModule());
+        if (User == null) {
+            throw new NotFound("RemoveSeeClass - Usuario não encontrado!");
+        }
+        try {
+            User.getMyPaths().get(addSeeClassDTO.PathID()).AddSeeClass(false,addSeeClassDTO.IDclass(),addSeeClassDTO.indexModule());
+        }catch (NullPointerException exception) {
+            throw new UserAspectsUnexpected("RemoveSeeClass - Erro na tentativa de {!visualizar} Aula!");
+        }
+
         userRepository.save(User);
     }
 
     public void AddNote (NoteDTO noteDTO){
         var User = userRepository.findByuserName(noteDTO.UserName());
-        User.UpdateNewNote(noteDTO.message());
+        if (User == null) {
+            throw new NotFound("AddNote - Usuario não encontrado!");
+        }
+        if (noteDTO.message() != null && !noteDTO.message().trim().isEmpty()){
+            User.UpdateNewNote(noteDTO.message());
+        }
+        else {
+            throw new InconsistentParameter("AddNote - Parametro Iconsitente com que se espera");
+        }
         userRepository.save(User);
     }
 
     public void RemoveNote (NoteDTO noteDTO){
         var User = userRepository.findByuserName(noteDTO.UserName());
-        User.DeleteNote(noteDTO.key());
+        if (User == null) {
+            throw new NotFound("RemoveNote - Usuario não encontrado!");
+        }
+        try {User.DeleteNote(noteDTO.key());}
+        catch (NullPointerException erro){
+            throw new UserAspectsUnexpected("RemoveNote - Erro achar key - Note");
+        }
         userRepository.save(User);
     }
 }
