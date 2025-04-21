@@ -80,15 +80,15 @@ public class AuthorPath {
         }
     }
 
-     public void  pathUpdate (PathUpdate pathDTO){
+     public void pathUpdate (PathUpdate pathDTO){
 
          var path = pathRepositoy.findPath(pathDTO.PathID());
          if (path != null){
              path.UpdatePathStats(pathDTO);
              pathRepositoy.save(path);
+
          }
          else {throw new NotFound("pathUpdate - Path não encontrado");}
-
      }
 
      public void  pathDelete (PathUpdate pathDTO){
@@ -98,12 +98,12 @@ public class AuthorPath {
         else { throw new NotFound("pathDelete - Path não encontrado");}
      }
 
-     public void UpadateNewModule(ModuloUpdateDTO pathUpdate){
+     public void UpadateNewModule(ModuloUpdateDTO ModuleUpdate){
 
-        Path pathList = pathRepositoy.findPath(pathUpdate.PathID());
+        Path pathList = pathRepositoy.findPath(ModuleUpdate.PathID());
         if (pathList != null){
             try {
-            pathList.AddNewModulo(pathUpdate);
+            pathList.AddNewModulo(ModuleUpdate);
             pathRepositoy.save(pathList);
             }catch (NullPointerException erro){
                 throw new PathAspectsUnexpected("UpadateNewModule - Falha no sucesso do metodo AddNewModulo");
@@ -143,14 +143,14 @@ public class AuthorPath {
      }
 
      public void UpadateNewClass(ClassUpdate classUpdate){
-         Path pathList = pathRepositoy.findPath(classUpdate.id());
-         if (pathList != null){
+         Path Path = pathRepositoy.findPath(classUpdate.PathID());
+         if (Path != null){
              try {
-                 pathList.getModulos().get(classUpdate.indexModule()).UpdateNewClass(classUpdate.threePath());
-                 var recentClass = pathList.getModulos().get(classUpdate.indexModule()).getModulocontent().get(pathList.getModulos().get(classUpdate.indexModule()).getModulocontent().size()-1);
-                 pathList.UpdatenClass(true,recentClass.getID());
-                 pathRepositoy.save(pathList);
-             }catch (NullPointerException erro){
+                 Path.getModulos().get(classUpdate.indexModule()).UpdateNewClass(classUpdate.threePath());
+                 var recentClass = Path.getModulos().get(classUpdate.indexModule()).getModulocontent().get(Path.getModulos().get(classUpdate.indexModule()).getModulocontent().size()-1);
+                 Path.UpdatenClass(true,recentClass.getID());
+                 pathRepositoy.save(Path);
+             }catch (IndexOutOfBoundsException erro){
                  throw new PathAspectsUnexpected("UpadateNewClass - Falha ao encontrar modulo em meio ao Path");
              }
          }
@@ -158,7 +158,7 @@ public class AuthorPath {
      }
 
     public void UpdateClassUnic(ClassUpdate classUpdate){
-        Path pathList = pathRepositoy.findPath(classUpdate.id());
+        Path pathList = pathRepositoy.findPath(classUpdate.PathID());
         if (pathList != null){
             var newClass = new Aulas();
             newClass.ClassUpdate(classUpdate.threePath());
@@ -173,7 +173,7 @@ public class AuthorPath {
     }
 
      public void DeleteClassUnic(ClassUpdate classUpdate){
-         Path pathList = pathRepositoy.findPath(classUpdate.id());
+         Path pathList = pathRepositoy.findPath(classUpdate.PathID());
          if (pathList != null){
          try {
              var modulo = pathList.getModulos().get(classUpdate.indexModule());

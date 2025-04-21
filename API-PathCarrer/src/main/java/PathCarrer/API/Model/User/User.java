@@ -50,10 +50,12 @@ public class User implements UserDetails {
         this.myPaths = new HashMap<>();
     }
 
-    public void AddMyPaths(Path newPath) {
+    public boolean AddMyPaths(Path newPath) {
         var newAddPath = new MyPathsAdd();
         newAddPath.MyPathsAddC(newPath.getModulos().size());
         this.myPaths.put(newPath.getId(),newAddPath);
+
+        return true;
     }
 
     public void UpdateNewNote(String y) {
@@ -97,15 +99,6 @@ public class User implements UserDetails {
 
     public void setBannerProfile(String bannerProfile) {
         BannerProfile = bannerProfile;
-    }
-
-
-    public List<insignia> getInsigniaON() {
-        return InsigniaON;
-    }
-
-    public List<insignia> getInsigniaStorage() {
-        return InsigniaStorage;
     }
 
     public String getUserName() {

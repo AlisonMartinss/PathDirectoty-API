@@ -13,5 +13,5 @@ import PathCarrer.API.DTO.CreatePathStep.threePath;
      - threePath:  objedo contendo: titulo, link, desc;  Que farão a substituição.
 
  **/
-public record ClassUpdate(String id, int indexModule, String nameModulo, int indexClass, threePath threePath) {
+public record ClassUpdate(String PathID, int indexModule, String nameModulo, int indexClass, threePath threePath) {
 }

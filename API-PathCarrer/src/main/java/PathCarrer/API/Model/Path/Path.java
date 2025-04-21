@@ -155,13 +155,15 @@ public class Path {
         }
     }
 
-    public void UpdatePathCount(boolean x){
+    public boolean UpdatePathCount(boolean x){
         if (x){
           this.alredyAdd++;
           this.everAdd ++;
+          return true;
         }
         else {
             this.alredyAdd--;
+            return false;
         }
     }
 
