@@ -1,6 +1,7 @@
 package PathCarrer.API.Configurations.ConfigurationsAll;
 
 import PathCarrer.API.Configurations.TokenConfig.Token;
+import PathCarrer.API.ExeptionsClasses.GenericErro;
 import PathCarrer.API.Repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,13 +25,12 @@ public class SecurityFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         var TokenJWT = getToken(request);
         if (TokenJWT != null){
-            var TokenValid =  tokenservice.VerifyToken(TokenJWT);
-            var User = userRepository.findByuserName(TokenValid);
-            var authentication = new UsernamePasswordAuthenticationToken(User,null,User.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+             var TokenValid =  tokenservice.VerifyToken(TokenJWT);
+             var User = userRepository.findByuserName(TokenValid);
+             var authentication = new UsernamePasswordAuthenticationToken(User,null,User.getAuthorities());
+             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request,response);
-
     }
 
     private String getToken (HttpServletRequest JSON){

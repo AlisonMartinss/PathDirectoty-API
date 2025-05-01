@@ -39,7 +39,6 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-
 public class interaction {
     @Autowired
     private PathRepository pathRepository;
@@ -57,8 +56,8 @@ public class interaction {
                     var modulo = Path.getModulos().get(interactionDTO.indexModule());
                     modulo.postComment(interactionDTO.Gen(),interactionDTO.fatherID(),interactionDTO.comment(),User.getWorldID());
                     pathRepository.save(Path);
-                }catch (NullPointerException error){
-                    throw new PathAspectsUnexpected("PostComment - Modulo não encontrado");
+                }catch (IndexOutOfBoundsException error){
+                    throw new PathAspectsUnexpected("PostComment - Modulo não encontrado " + error);
                 }
             }
             else {

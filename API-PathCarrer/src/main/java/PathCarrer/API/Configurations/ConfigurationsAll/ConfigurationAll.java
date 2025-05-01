@@ -22,6 +22,8 @@ import java.util.List;
 public class ConfigurationAll {
     @Autowired
     private SecurityFilter securityFilter;
+    @Autowired
+    private AuthenticationTratamentCustom authenticationTratamentCustom;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws
@@ -35,6 +37,8 @@ public class ConfigurationAll {
                             req.requestMatchers(HttpMethod.POST,"/Login","/Login/NewUser").permitAll();
                             req.anyRequest().authenticated();
                         })
+                        .exceptionHandling(ex -> ex
+                                .authenticationEntryPoint(authenticationTratamentCustom))
                         .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                         .build();
     }
@@ -48,10 +52,10 @@ public class ConfigurationAll {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173")); // Permite o frontend acessar
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        configuration.setAllowCredentials(true); // Permite envio de cookies/token
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

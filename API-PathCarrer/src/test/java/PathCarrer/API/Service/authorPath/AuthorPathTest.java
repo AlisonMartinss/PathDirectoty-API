@@ -7,17 +7,23 @@ import PathCarrer.API.DTO.PathDTO;
 import PathCarrer.API.DTO.Update.ClassUpdate;
 import PathCarrer.API.DTO.Update.ModuloUpdateDTO;
 import PathCarrer.API.DTO.Update.PathUpdate;
+import PathCarrer.API.Model.Path.Aulas;
 import PathCarrer.API.Model.Path.Path;
 import PathCarrer.API.Model.Path.modulo;
 import PathCarrer.API.Model.User.User;
 import PathCarrer.API.Repository.PathRepository;
 import PathCarrer.API.Repository.UserRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,98 +87,165 @@ class AuthorPathTest {
 
     @Test
     public void shouldUpdatePathWhenItExists() {
-        Path CurrentPath = mock(Path.class);
-        var PathUpdateMock = new PathUpdate("4002",   new onePath(
-                "Testes",
-                "Teste",
-                List.of("01", "02", "03", "04", "05"),
-                List.of("#test"),
-                "testando 'CreatePath'",
-                "http/"
-        ));
+        var user = mock(User.class);
+        when(user.getWorldID()).thenReturn("id-usuario-autenticado");
 
-        when(pathRepository.findPath(PathUpdateMock.PathID())).thenReturn(CurrentPath);
-        authorPath.pathUpdate(PathUpdateMock);
+        try (MockedStatic<SecurityContextHolder> mockSecurityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+            SecurityContext securityContext = mock(SecurityContext.class);
+            Authentication authentication = mock(Authentication.class);
 
-        Mockito.verify(pathRepository).findPath(PathUpdateMock.PathID());
-        Mockito.verify(pathRepository).save(Mockito.any(Path.class));
+            mockSecurityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getPrincipal()).thenReturn(user);
+
+            Path path = mock(Path.class);
+            when(path.getIdAuthor()).thenReturn("id-usuario-autenticado");
+
+            var pathUpdate = new PathUpdate("path-id", new onePath(
+                    "Título", "Categoria", List.of("01", "02", "03", "04", "05"),
+                    List.of("#tag"), "Descrição", "http://link"
+            ));
+
+            when(pathRepository.findPath(pathUpdate.PathID())).thenReturn(path);
+            when(userRepository.findByWorldID("id-usuario-autenticado")).thenReturn(user);
+
+            authorPath.pathUpdate(pathUpdate);
+
+            Mockito.verify(pathRepository).save(path);
+        }
     }
+
 
     @Test
     public void shouldDeletePathWhenItExists() {
-        Path CurrentPath = mock(Path.class);
-        var PathUpdateMock = new PathUpdate("4002",   new onePath(
-                "Testes",
-                "Teste",
-                List.of("01", "02", "03", "04", "05"),
-                List.of("#test"),
-                "testando 'CreatePath'",
-                "http/"
-        ));
+        var user = mock(User.class);
+        when(user.getWorldID()).thenReturn("id-usuario-autenticado");
 
-        when(pathRepository.findPath(PathUpdateMock.PathID())).thenReturn(CurrentPath);
-        authorPath.pathDelete(PathUpdateMock);
+        try (MockedStatic<SecurityContextHolder> mockSecurityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+            SecurityContext securityContext = mock(SecurityContext.class);
+            Authentication authentication = mock(Authentication.class);
 
-        Mockito.verify(pathRepository).deleteById(PathUpdateMock.PathID());
+            mockSecurityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getPrincipal()).thenReturn(user);
+
+            Path path = mock(Path.class);
+            when(path.getIdAuthor()).thenReturn("id-usuario-autenticado");
+
+            PathUpdate updateDTO = new PathUpdate("path-id", mock(onePath.class));
+            when(pathRepository.findPath(updateDTO.PathID())).thenReturn(path);
+            when(userRepository.findByWorldID("id-usuario-autenticado")).thenReturn(user);
+
+            authorPath.pathDelete(updateDTO);
+
+            Mockito.verify(pathRepository).deleteById(updateDTO.PathID());
+        }
     }
+
 
     @Test
     public void shouldUpdateModule() {
-        Path CurrentPath = mock(Path.class);
-        ModuloUpdateDTO ModuleDTOMock = mock(ModuloUpdateDTO.class);
+        var user = mock(User.class);
+        when(user.getWorldID()).thenReturn("user-id");
 
-        when(pathRepository.findPath(ModuleDTOMock.PathID())).thenReturn(CurrentPath);
-        authorPath.UpadateNewModule(ModuleDTOMock);
+        try (MockedStatic<SecurityContextHolder> mockSecurityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+            SecurityContext securityContext = mock(SecurityContext.class);
+            Authentication authentication = mock(Authentication.class);
+            mockSecurityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getPrincipal()).thenReturn(user);
 
-        Mockito.verify(pathRepository).save(CurrentPath);
-        Mockito.verify(CurrentPath).AddNewModulo(ModuleDTOMock);
+            Path path = mock(Path.class);
+            when(path.getIdAuthor()).thenReturn("user-id");
+
+            ModuloUpdateDTO dto = mock(ModuloUpdateDTO.class);
+            when(dto.PathID()).thenReturn("path-id");
+            when(dto.indexMoudulo()).thenReturn(0);
+            when(dto.title()).thenReturn("novo titulo");
+            when(dto.desc()).thenReturn("nova descrição");
+
+            when(pathRepository.findPath("path-id")).thenReturn(path);
+            when(userRepository.findByWorldID("user-id")).thenReturn(user);
+
+            var moduloMock = mock(modulo.class);
+            var aulasMock = mock(Aulas.class);
+
+            List<modulo> modulos = List.of(moduloMock);
+            when(path.getModulos()).thenReturn(modulos);
+            when(moduloMock.getModulocontent()).thenReturn(List.of(aulasMock));
+
+            authorPath.UpdateModule(dto);
+
+            Mockito.verify(pathRepository).save(path);
+            Mockito.verify(moduloMock).setName("novo titulo");
+            Mockito.verify(moduloMock).setDescription("nova descrição");
+            Mockito.verify(aulasMock).ClassUpdate("novo titulo", "nova descrição", "link Mock");
+        }
     }
 
-    @Test
-    public void shouldDeleteModule() {
-        Path CurrentPath = mock(Path.class);
-        ModuloUpdateDTO ModuleDTOMock = mock(ModuloUpdateDTO.class);
-
-        when(pathRepository.findPath(ModuleDTOMock.PathID())).thenReturn(CurrentPath);
-        authorPath.DeleteModule(ModuleDTOMock);
-
-        Mockito.verify(pathRepository).save(CurrentPath);
-        Mockito.verify(CurrentPath).deleteModule(ModuleDTOMock.indexMoudulo());
-    }
-
-    // UpdateClassUnic
 
     @Test
     public void shouldDeleteClassUnic() {
+        var user = mock(User.class);
+        when(user.getWorldID()).thenReturn("user-id");
 
-        Path CurrentPath = mock(Path.class);
-        ClassUpdate classUpdateMock = mock(ClassUpdate.class);
+        try (MockedStatic<SecurityContextHolder> mockSecurityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+            SecurityContext securityContext = mock(SecurityContext.class);
+            Authentication authentication = mock(Authentication.class);
 
-        modulo modulo = new modulo();
-        modulo.moduloCreate("ModuleName", "ModuleDescription", List.of(new threePath("Title", "Link", "Desc")));
+            mockSecurityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getPrincipal()).thenReturn(user);
 
-        List<modulo> modulosMock = new ArrayList<>();
-        modulosMock.add(modulo);
+            Path path = mock(Path.class);
+            when(path.getIdAuthor()).thenReturn("user-id");
 
-        when(CurrentPath.getModulos()).thenReturn(modulosMock);
-        when(classUpdateMock.indexModule()).thenReturn(0);
+            threePath threePath = mock(threePath.class);
 
-        when(pathRepository.findPath(classUpdateMock.PathID())).thenReturn(CurrentPath);
 
-        authorPath.DeleteClassUnic(classUpdateMock);
+            ClassUpdate dto = new ClassUpdate("path-id", 0, "nome do modulo",0,threePath);
 
-        Mockito.verify(pathRepository).save(CurrentPath);
+            when(userRepository.findByWorldID("user-id")).thenReturn(user);
+            when(pathRepository.findPath("path-id")).thenReturn(path);
+
+            modulo moduloMock = mock(modulo.class);
+            when(path.getModulos()).thenReturn(List.of(moduloMock));
+
+            Aulas aulaMock = mock(Aulas.class);
+            when(moduloMock.getModulocontent()).thenReturn(new ArrayList<>(List.of(aulaMock)));
+
+            authorPath.DeleteClassUnic(dto);
+
+
+            Mockito.verify(moduloMock).getModulocontent();
+            Mockito.verify(pathRepository).save(path);
+        }
     }
+
 
     @Test
     public void shouldProfileInfo() {
-        User userMock = mock(User.class);
+        var user = mock(User.class);
+        when(user.getWorldID()).thenReturn("user-id");
 
-        when(userRepository.findByWorldID(userMock.getWorldID())).thenReturn(userMock);
-        var result  = authorPath.GetProfileInfo(userMock.getWorldID());
+        try (MockedStatic<SecurityContextHolder> mockSecurityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+            SecurityContext securityContext = mock(SecurityContext.class);
+            Authentication authentication = mock(Authentication.class);
 
-        assertNotNull(result);
+            mockSecurityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getPrincipal()).thenReturn(user);
+
+            when(userRepository.findByWorldID("user-id")).thenReturn(user);
+
+            var dto = authorPath.GetProfileInfo(user.getWorldID());
+
+            Assertions.assertNotNull(dto);
+            Mockito.verify(userRepository).findByWorldID("user-id");
+        }
     }
+
+
 
 
 

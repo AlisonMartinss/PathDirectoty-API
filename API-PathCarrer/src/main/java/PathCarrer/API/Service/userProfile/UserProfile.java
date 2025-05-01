@@ -8,13 +8,13 @@ import PathCarrer.API.DTO.UsersDTO.LobyDTO;
 import PathCarrer.API.DTO.UsersDTO.NoteDTO;
 import PathCarrer.API.DTO.UsersDTO.UpdateProfileName;
 import PathCarrer.API.DTO.UsersDTO.UserEasyAspects;
-import PathCarrer.API.ExeptionsClasses.GenericErro;
-import PathCarrer.API.ExeptionsClasses.InconsistentParameter;
-import PathCarrer.API.ExeptionsClasses.NotFound;
-import PathCarrer.API.ExeptionsClasses.UserAspectsUnexpected;
+import PathCarrer.API.ExeptionsClasses.*;
+import PathCarrer.API.Model.User.User;
 import PathCarrer.API.Repository.PathRepository;
 import PathCarrer.API.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -58,24 +58,35 @@ public class UserProfile {
     private PasswordEncoder passwordEncoder;
 
     public LobyDTO Loby(String userName){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User usuarioLogado = (User) auth.getPrincipal();
 
-          var User = userRepository.findByuserName(userName);
+        var User = userRepository.findByuserName(userName);
 
-          if (User == null) {
+        if (User == null) {
               throw new NotFound("Loby - Usuario não encontrado!");
-          }
-          for (String chave : User.getMyPaths().keySet()) {
-                if (pathRepository.findPath(chave) == null){
-                    User.getMyPaths().remove(chave);
-                }
-          }
+        }
 
-          userRepository.save(User);
-          return new LobyDTO(User);
+        if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
+            throw new Hackers("Loby - fingindo ser outro");
+        }
+
+        for (String chave : User.getMyPaths().keySet()) {
+          if (pathRepository.findPath(chave) == null){
+          User.getMyPaths().remove(chave);
+          }
+        }
+
+        userRepository.save(User);
+        return new LobyDTO(User);
     }
 
     public void AddPath (AddPath AddPath){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User usuarioLogado = (User) auth.getPrincipal();
+
         var User = userRepository.findByuserName(AddPath.userName());
+
         if (User == null) {
             throw new NotFound("AddPath - Usuario não encontrado!");
         }
@@ -83,6 +94,9 @@ public class UserProfile {
         var path = pathRepository.findPath(AddPath.PathID());
         if (path == null) {
             throw new NotFound("AddPath - Path Não Encontrado!");
+        }
+        if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
+            throw new Hackers("AddPath - fingindo ser outro");
         }
 
         path.UpdatePathCount(true);
@@ -92,16 +106,25 @@ public class UserProfile {
     }
 
     public void RemovePath (AddPath AddPath){
-        var User  = userRepository.findByuserName(AddPath.userName());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User usuarioLogado = (User) auth.getPrincipal();
+
+        var User = userRepository.findByuserName(AddPath.userName());
+
         if (User == null) {
             throw new NotFound("RemovePath - Usuario não encontrado!");
         }
-        User.getMyPaths().remove(AddPath.PathID());
 
         var path = pathRepository.findPath(AddPath.PathID());
+
         if (path == null) {
             throw new NotFound("RemovePath - Path Não Encontrado!");
         }
+        if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
+            throw new Hackers("RemovePath - fingindo ser outro");
+        }
+
+        User.getMyPaths().remove(AddPath.PathID());
         path.UpdatePathCount(false);
 
         userRepository.save(User);
@@ -123,27 +146,40 @@ public class UserProfile {
     }
 
     public void NewName (UpdateProfileName userDTO){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User usuarioLogado = (User) auth.getPrincipal();
+
         var User = userRepository.findByuserName(userDTO.userName());
+
         if (User == null) {
             throw new NotFound("NewName - Usuario não encontrado!");
         }
-
-        if (userRepository.findByuserName(userDTO.newUsername()) == null){
-            var CopyUser = User;
-
-            userRepository.delete(User);
-            CopyUser.setUserName(userDTO.newUsername());
-            userRepository.save(CopyUser);
+        if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
+            throw new Hackers("NewName - fingindo ser outro");
         }
-        else {
+
+        if (userRepository.findByuserName(userDTO.newUsername()) != null){
             throw new GenericErro("NewName - Nome de Usuario não disponivel !");
         }
+
+        var CopyUser = User;
+
+        userRepository.delete(User);
+        CopyUser.setUserName(userDTO.newUsername());
+        userRepository.save(CopyUser);
     }
 
     public void UpdatePictureProfile(UserEasyAspects UserEasyAspects){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User usuarioLogado = (User) auth.getPrincipal();
+
         var User = userRepository.findByuserName(UserEasyAspects.userName());
+
         if (User == null) {
-            throw new NotFound("NewName - Usuario não encontrado!");
+            throw new NotFound("UpdatePictureProfile - Usuario não encontrado!");
+        }
+        if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
+            throw new Hackers("UpdatePictureProfile - fingindo ser outro");
         }
 
         if (UserEasyAspects.PictureProfile() != null && !UserEasyAspects.PictureProfile().trim().isEmpty()){
@@ -157,40 +193,62 @@ public class UserProfile {
     }
 
     public void UpdateDesc (UserEasyAspects userEasyAspects){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User usuarioLogado = (User) auth.getPrincipal();
+
         var User = userRepository.findByuserName(userEasyAspects.userName());
+
         if (User == null) {
             throw new NotFound("UpdateDesc - Usuario não encontrado!");
         }
-
-        if (userEasyAspects.desc() != null && !userEasyAspects.desc().trim().isEmpty()){
-            User.setDesc(userEasyAspects.desc());
+        if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
+            throw new Hackers("UpdateDesc - fingindo ser outro");
         }
-        else {
+
+        if (userEasyAspects.desc() == null || !userEasyAspects.desc().trim().isEmpty()) {
             throw new InconsistentParameter("InconsistentParameter/UpdateDesc - Desc");
         }
+
+        User.setDesc(userEasyAspects.desc());
+
         userRepository.save(User);
     }
 
     public void NewPassword (Password password){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User usuarioLogado = (User) auth.getPrincipal();
+
         var User = userRepository.findByuserName(password.userName());
+
         if (User == null) {
             throw new NotFound("NewPassword - Usuario não encontrado!");
         }
 
-        if (passwordEncoder.matches(password.curretPassword(),User.getPassword())){
-            User.setPassword(passwordEncoder.encode(password.newPassWord()));
-            userRepository.save(User);
+        if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
+            throw new Hackers("NewPassword - fingindo ser outro");
         }
-        else {
+
+        if (!(passwordEncoder.matches(password.curretPassword(),User.getPassword()))){
             throw new InconsistentParameter("InconsistentParameter/NewPassword - currentPassword");
         }
+
+        User.setPassword(passwordEncoder.encode(password.newPassWord()));
+        userRepository.save(User);
     }
 
     public void DeleteProfile(Password password) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User usuarioLogado = (User) auth.getPrincipal();
+
         var User = userRepository.findByuserName(password.userName());
         if (User == null) {
             throw new NotFound("DeleteProfile - Usuario não encontrado!");
         }
+
+        if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
+            throw new Hackers("DeleteProfile - fingindo ser outro");
+        }
+
         if (passwordEncoder.matches(password.curretPassword(),User.getPassword())){
             var PathByAuthor = pathRepository.findByAuthor(User.getWorldID());
             if (!PathByAuthor.isEmpty()){
@@ -201,12 +259,21 @@ public class UserProfile {
     }
 
     public void AddSeeClass (AddSeeClassDTO addSeeClassDTO){
-       var User = userRepository.findByuserName(addSeeClassDTO.UserName());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User usuarioLogado = (User) auth.getPrincipal();
+
+        var User = userRepository.findByuserName(addSeeClassDTO.UserName());
+
         if (User == null) {
             throw new NotFound("AddSeeClass - Usuario não encontrado!");
         }
+
+        if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
+            throw new Hackers("AddSeeClass - fingindo ser outro");
+        }
+
         try {
-        User.getMyPaths().get(addSeeClassDTO.PathID()).AddSeeClass(true,addSeeClassDTO.IDclass(),addSeeClassDTO.indexModule());
+            User.getMyPaths().get(addSeeClassDTO.PathID()).AddSeeClass(true,addSeeClassDTO.IDclass(),addSeeClassDTO.indexModule());
         } catch (NullPointerException exception) {
             throw new UserAspectsUnexpected("AddSeeClass - Erro na tentativa de visualizar Aula!");
         }
@@ -214,9 +281,17 @@ public class UserProfile {
     }
 
     public void RemoveSeeClass (AddSeeClassDTO addSeeClassDTO){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User usuarioLogado = (User) auth.getPrincipal();
+
         var User = userRepository.findByuserName(addSeeClassDTO.UserName());
+
         if (User == null) {
             throw new NotFound("RemoveSeeClass - Usuario não encontrado!");
+        }
+
+        if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
+            throw new Hackers("RemoveSeeClass - fingindo ser outro");
         }
         try {
             User.getMyPaths().get(addSeeClassDTO.PathID()).AddSeeClass(false,addSeeClassDTO.IDclass(),addSeeClassDTO.indexModule());
@@ -228,28 +303,47 @@ public class UserProfile {
     }
 
     public void AddNote (NoteDTO noteDTO){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User usuarioLogado = (User) auth.getPrincipal();
+
         var User = userRepository.findByuserName(noteDTO.UserName());
+
         if (User == null) {
             throw new NotFound("AddNote - Usuario não encontrado!");
         }
-        if (noteDTO.message() != null && !noteDTO.message().trim().isEmpty()){
-            User.UpdateNewNote(noteDTO.message());
+
+        if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
+            throw new Hackers("AddNote - fingindo ser outro");
         }
-        else {
+
+        if (noteDTO.message() == null || noteDTO.message().trim().isEmpty()){
             throw new InconsistentParameter("AddNote - Parametro Iconsitente com que se espera");
         }
+
+        User.UpdateNewNote(noteDTO.message());
+
         userRepository.save(User);
     }
 
     public void RemoveNote (NoteDTO noteDTO){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User usuarioLogado = (User) auth.getPrincipal();
+
         var User = userRepository.findByuserName(noteDTO.UserName());
+
         if (User == null) {
             throw new NotFound("RemoveNote - Usuario não encontrado!");
         }
+
+        if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
+            throw new Hackers("RemoveNote - fingindo ser outro");
+        }
+
         try {User.DeleteNote(noteDTO.key());}
         catch (NullPointerException erro){
             throw new UserAspectsUnexpected("RemoveNote - Erro achar key - Note");
         }
+
         userRepository.save(User);
     }
 }

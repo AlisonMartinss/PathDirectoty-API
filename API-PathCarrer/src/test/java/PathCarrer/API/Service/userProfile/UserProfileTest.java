@@ -232,10 +232,4 @@ class UserProfileTest {
         verify(userRepository).save(UserMock);
     }
 
-
-
-
-
-
-
 }

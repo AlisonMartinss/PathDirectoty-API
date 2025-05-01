@@ -3,6 +3,7 @@ package PathCarrer.API.Model.Path;
 import PathCarrer.API.DTO.PathDTO;
 import PathCarrer.API.DTO.Update.ModuloUpdateDTO;
 import PathCarrer.API.DTO.Update.PathUpdate;
+import PathCarrer.API.ExeptionsClasses.PathAspectsUnexpected;
 import PathCarrer.API.Model.Path.Comments.Comment;
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -13,7 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 
 
-@Document(collection = "Testagem1312")
+@Document(collection = "Path")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -23,7 +24,7 @@ public class Path {
 
     private  boolean active;
 
-    private int alredyAdd;
+    private int currentAdd;
 
     private int everAdd;
 
@@ -62,7 +63,7 @@ public class Path {
         this.forum = new ArrayList<>();
         this.modulos = new ArrayList<>();
         this.ClassPresent = new HashSet<>();
-        this.alredyAdd = 0;
+        this.currentAdd = 0;
         this.everAdd = 0;
 
 
@@ -70,18 +71,9 @@ public class Path {
             fillSetTags(JSON.onePathDTO().tags(), tags);
         }
 
-        else {
-            System.out.println("Lista de tags vazia");
-        }
-
         if (!JSON.onePathDTO().adjetives().isEmpty()){
             fillSetAdjectives(JSON.onePathDTO().adjetives(), adjectivesElements);
         }
-
-        else {
-            System.out.println("Lista de adjetivos vazia");
-        }
-
 
         if (!JSON.twoPathDTO().ClassList().isEmpty()){
             var novo = new modulo();
@@ -92,7 +84,7 @@ public class Path {
             }
         }
         else {
-            System.out.println("Lista de aulas vazia");
+            throw new PathAspectsUnexpected("Erro ao tentar criar Path. Lista de aulas vazia!");
         }
 
         this.active = true;
@@ -157,12 +149,12 @@ public class Path {
 
     public boolean UpdatePathCount(boolean x){
         if (x){
-          this.alredyAdd++;
+          this.currentAdd++;
           this.everAdd ++;
           return true;
         }
         else {
-            this.alredyAdd--;
+            this.currentAdd--;
             return false;
         }
     }
@@ -206,8 +198,8 @@ public class Path {
         return idAuthor;
     }
 
-    public int getAlredyAdd() {
-        return alredyAdd;
+    public int getCurrentAdd() {
+        return currentAdd;
     }
 
     public int getEverAdd() {

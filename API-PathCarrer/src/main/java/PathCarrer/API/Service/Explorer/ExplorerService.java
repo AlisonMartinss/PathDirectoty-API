@@ -2,6 +2,7 @@ package PathCarrer.API.Service.Explorer;
 
 
 import PathCarrer.API.Model.ExplorerModels.Explorer;
+import PathCarrer.API.Model.Path.Path;
 import PathCarrer.API.Repository.PathRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,5 +47,11 @@ public class ExplorerService {
     public List<Explorer> CategoryExplorer (String category){
         return pathRepository.CategoryExplorer(category);
     }
+
+    public List<Path> MyPathsAuthor (String UserName){
+        return pathRepository.findByAuthor(UserName);
+    }
+
+
 
 }

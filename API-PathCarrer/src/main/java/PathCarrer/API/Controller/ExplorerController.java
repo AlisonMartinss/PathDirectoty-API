@@ -3,7 +3,6 @@ package PathCarrer.API.Controller;
 import PathCarrer.API.Service.Explorer.ExplorerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,6 +17,12 @@ public class ExplorerController {
     @GetMapping("/CategoryExplorer")
     public ResponseEntity CategoryExplorer (@RequestParam String category){
         return ResponseEntity.ok(explorerService.CategoryExplorer(category));
+    }
+
+    @GetMapping("/MyPaths")
+    public ResponseEntity MyPathsAuthor (@RequestParam String UserName){
+        System.out.println("MyPath");
+        return ResponseEntity.ok(explorerService.MyPathsAuthor(UserName));
     }
 
 }

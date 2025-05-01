@@ -26,10 +26,10 @@ public class Aulas {
     }
 
 
-    public void ClassUpdate(threePath threePath){
-        this.title = threePath.title();
-        this.description = threePath.description();
-        this.link = threePath.link();
+    public void ClassUpdate(String title,String description, String link){
+        this.title = title;
+        this.description = description;
+        this.link = link;
     }
 
     @Override

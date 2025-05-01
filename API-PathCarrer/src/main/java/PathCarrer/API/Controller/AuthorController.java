@@ -44,7 +44,6 @@ public class AuthorController {
     @Transactional
     @PostMapping("/UpadateNewModule")
     public ResponseEntity pathUpadateNewModule(@RequestBody ModuloUpdateDTO pathUpdate){
-        System.out.println("New moduile");
         authorPath.UpadateNewModule(pathUpdate);
         return ResponseEntity.noContent().build();
     }
@@ -73,6 +72,7 @@ public class AuthorController {
     @Transactional
     @PutMapping("/UpdateClassUnic")
     public ResponseEntity UpdateClassUnic (@RequestBody ClassUpdate classUpdate){
+        System.out.println(classUpdate);
         authorPath.UpdateClassUnic(classUpdate);
         return ResponseEntity.noContent().build();
     }
