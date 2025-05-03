@@ -71,14 +71,14 @@ public class AuthorPath {
         var novo = new Path();
         var User = userRepository.findByuserName(pathDTO.authorID());
         if (User == null) {
-            throw new NotFound("PathCreate - Usuario não encontrado");
+            throw new NotFound("PathCreate Usuario nao encontrado");
         }
         try{
            novo.CreateNewPath(pathDTO, User.getWorldID().toString());
            pathRepositoy.save(novo);
            return novo;
         } catch (NullPointerException erro) {
-            throw new NotFound("PathCreate - Falha ao criar path");
+            throw new NotFound("PathCreate Falha ao criar path");
         }
     }
 
@@ -88,16 +88,16 @@ public class AuthorPath {
 
         Path path = pathRepositoy.findPath(pathDTO.PathID());
         if (path == null) {
-            throw new NotFound("pathUpdate - Path não encontrado");
+            throw new NotFound("pathUpdate Path nao encontrado");
         }
 
         User autor = userRepository.findByWorldID(path.getIdAuthor());
         if (autor == null) {
-            throw new NotFound("pathUpdate - Author do path não encontrado");
+            throw new NotFound("pathUpdate Author do path nao encontrado");
         }
 
         if (!usuarioLogado.getWorldID().equals(autor.getWorldID())) {
-            throw new Hackers("pathUpdate - fingindo ser outro");
+            throw new Hackers("fingindo ser outro");
         }
 
         path.UpdatePathStats(pathDTO);
@@ -111,17 +111,17 @@ public class AuthorPath {
         var path = pathRepositoy.findPath(pathDTO.PathID());
 
         if (path == null) {
-            throw new NotFound("pathDelete - Path não encontrado");
+            throw new NotFound("pathDelete Path nao encontrado");
         }
 
         var autor = userRepository.findByWorldID(path.getIdAuthor());
 
         if (autor == null) {
-            throw new NotFound("pathDelete - Autor não encontrado");
+            throw new NotFound("pathDelete Autor nao encontrado");
         }
 
         if (!usuarioLogado.getWorldID().equals(autor.getWorldID())) {
-            throw new Hackers("pathDelete - fingindo ser outro");
+            throw new Hackers("fingindo ser outro");
         }
 
         pathRepositoy.deleteById(pathDTO.PathID());
@@ -135,24 +135,24 @@ public class AuthorPath {
         Path pathList = pathRepositoy.findPath(ModuleUpdate.PathID());
 
         if (pathList == null) {
-            throw new NotFound("UpadateNewModule - Path não encontrado");
+            throw new NotFound("UpadateNewModule Path nao encontrado");
         }
 
         User autor = userRepository.findByWorldID(pathList.getIdAuthor());
 
         if (autor == null) {
-            throw new NotFound("UpadateNewModule - Autor não encontrado");
+            throw new NotFound("UpadateNewModule Autor nao encontrado");
         }
 
         if (!usuarioLogado.getWorldID().equals(autor.getWorldID())) {
-            throw new Hackers("UpadateNewModule - fingindo ser outro");
+            throw new Hackers("fingindo ser outro");
         }
 
         try {
             pathList.AddNewModulo(ModuleUpdate);
             pathRepositoy.save(pathList);
         } catch (NullPointerException erro) {
-            throw new PathAspectsUnexpected("UpadateNewModule - Falha no sucesso do metodo AddNewModulo");
+            throw new PathAspectsUnexpected("UpadateNewModule Falha no sucesso do metodo AddNewModulo");
         }
     }
 
@@ -164,17 +164,17 @@ public class AuthorPath {
         Path pathList = pathRepositoy.findPath(pathUpdate.PathID());
 
         if (pathList == null) {
-            throw new PathAspectsUnexpected("UpdateModule - Falha ao encontrar modulo em meio ao Path");
+            throw new PathAspectsUnexpected("UpdateModule Falha ao encontrar modulo em meio ao Path");
         }
 
         User autor = userRepository.findByWorldID(pathList.getIdAuthor());
 
         if (autor == null) {
-            throw new NotFound("UpdateModule - Autor não encontrado");
+            throw new NotFound("UpdateModule Autor nao encontrado");
         }
 
         if (!usuarioLogado.getWorldID().equals(autor.getWorldID())) {
-            throw new Hackers("UpdateModule - fingindo ser outro");
+            throw new Hackers("fingindo ser outro");
         }
 
         try {
@@ -183,7 +183,7 @@ public class AuthorPath {
             pathList.getModulos().get(pathUpdate.indexMoudulo()).getModulocontent().get(0).ClassUpdate(pathUpdate.title(), pathUpdate.desc(), "link Mock");
             pathRepositoy.save(pathList);
         } catch (NullPointerException erro) {
-            throw new PathAspectsUnexpected("UpdateModule - Falha ao encontrar modulo em meio ao Path");
+            throw new PathAspectsUnexpected("UpdateModule Falha ao encontrar modulo em meio ao Path");
         }
 
     }
@@ -195,24 +195,24 @@ public class AuthorPath {
         Path pathList = pathRepositoy.findPath(pathUpdate.PathID());
 
         if (pathList == null) {
-            throw new PathAspectsUnexpected("DeleteModule - Falha ao encontrar modulo em meio ao Path");
+            throw new PathAspectsUnexpected("DeleteModule Falha ao encontrar modulo em meio ao Path");
         }
 
         User autor = userRepository.findByWorldID(pathList.getIdAuthor());
 
         if (autor == null) {
-            throw new NotFound("DeleteModule - Autor não encontrado");
+            throw new NotFound("DeleteModule Autor nao encontrado");
         }
 
         if (!usuarioLogado.getWorldID().equals(autor.getWorldID())) {
-            throw new Hackers("DeleteModule - fingindo ser outro");
+            throw new Hackers("fingindo ser outro");
         }
 
         try {
             pathList.deleteModule(pathUpdate.indexMoudulo());
             pathRepositoy.save(pathList);
         } catch (NullPointerException erro) {
-            throw new PathAspectsUnexpected("DeleteModule - Falha ao encontrar modulo em meio ao Path");
+            throw new PathAspectsUnexpected("DeleteModule Falha ao encontrar modulo em meio ao Path");
         }
     }
 
@@ -223,17 +223,17 @@ public class AuthorPath {
         Path Path = pathRepositoy.findPath(classUpdate.PathID());
 
         if (Path == null) {
-            throw new PathAspectsUnexpected("UpadateNewClass - Falha ao encontrar modulo em meio ao Path");
+            throw new PathAspectsUnexpected("UpadateNewClass Falha ao encontrar modulo em meio ao Path");
         }
 
         User autor = userRepository.findByWorldID(Path.getIdAuthor());
 
         if (autor == null) {
-            throw new NotFound("UpadateNewClass - Autor não encontrado");
+            throw new NotFound("UpadateNewClass Autor nao encontrado");
         }
 
         if (!usuarioLogado.getWorldID().equals(autor.getWorldID())) {
-            throw new Hackers("UpadateNewClass - fingindo ser outro");
+            throw new Hackers("fingindo ser outro");
         }
 
         try {
@@ -242,7 +242,7 @@ public class AuthorPath {
             Path.UpdatenClass(true, recentClass.getID());
             pathRepositoy.save(Path);
         } catch (IndexOutOfBoundsException erro) {
-            throw new PathAspectsUnexpected("UpadateNewClass - Falha ao encontrar modulo em meio ao Path");
+            throw new PathAspectsUnexpected("UpadateNewClass Falha ao encontrar modulo em meio ao Path");
         }
     }
 
@@ -254,17 +254,17 @@ public class AuthorPath {
         Path pathList = pathRepositoy.findPath(classUpdate.PathID());
 
         if (pathList == null) {
-            throw new PathAspectsUnexpected("UpdateClassUnic - Falha ao encontrar modulo em meio ao Path");
+            throw new PathAspectsUnexpected("Falha ao encontrar modulo em meio ao Path");
         }
 
         User autor = userRepository.findByWorldID(pathList.getIdAuthor());
 
         if (autor == null) {
-            throw new NotFound("UpdateClassUnic - Autor não encontrado");
+            throw new NotFound("UpdateClassUnic Autor nao encontrado");
         }
 
         if (!usuarioLogado.getWorldID().equals(autor.getWorldID())) {
-            throw new Hackers("UpdateClassUnic - fingindo ser outro");
+            throw new Hackers("fingindo ser outro");
         }
 
         var newClass = new Aulas();
@@ -274,7 +274,7 @@ public class AuthorPath {
             pathRepositoy.save(pathList);
             System.out.println(pathList.getModulos().get(classUpdate.indexModule()).getModulocontent().get(classUpdate.indexClass()));
         }catch (NullPointerException erro) {
-            throw new PathAspectsUnexpected("UpdateClassUnic - Falha em econtrar modulo ou aula");
+            throw new PathAspectsUnexpected("UpdateClassUnic Falha em econtrar modulo ou aula");
         }
     }
 
@@ -285,17 +285,17 @@ public class AuthorPath {
          Path pathList = pathRepositoy.findPath(classUpdate.PathID());
 
          if (pathList == null) {
-             throw new PathAspectsUnexpected("DeleteClassUnic - Falha ao encontrar modulo em meio ao Path");
+             throw new PathAspectsUnexpected("DeleteClassUnic Falha ao encontrar modulo em meio ao Path");
          }
 
          User autor = userRepository.findByWorldID(pathList.getIdAuthor());
 
          if (autor == null) {
-             throw new NotFound("DeleteClassUnic - Autor não encontrado");
+             throw new NotFound("DeleteClassUnic Autor nao encontrado");
          }
 
          if (!usuarioLogado.getWorldID().equals(autor.getWorldID())) {
-             throw new Hackers("DeleteClassUnic - fingindo ser outro");
+             throw new Hackers("fingindo ser outro");
          }
 
          try {
@@ -304,22 +304,16 @@ public class AuthorPath {
              modulo.DeleteClass(classUpdate.indexClass());
              pathRepositoy.save(pathList);
          }catch (NullPointerException erro){
-             throw new PathAspectsUnexpected("DeleteClassUnic - Falha em econtrar modulo ou aula");
+             throw new PathAspectsUnexpected("DeleteClassUnic Falha em econtrar modulo ou aula");
          }
      }
 
     public ParallelDataDTO GetProfileInfo (String worldID){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User usuarioLogado = (User) auth.getPrincipal();
 
         var User = userRepository.findByWorldID(worldID);
 
         if (User == null) {
-            throw new NotFound("GetProfileInfo - Autor/Usuario não encontrado");
-        }
-
-        if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
-            throw new Hackers("DeleteClassUnic - fingindo ser outro");
+            throw new NotFound("GetProfileInfo Autor/Usuario não encontrado");
         }
 
         return new ParallelDataDTO(User);

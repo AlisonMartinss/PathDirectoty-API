@@ -2,23 +2,36 @@ package PathCarrer.API.Model.Path.Comments;
 
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 
 public class ZComments {
 
+    //A propria classe representa a GEN
+
     private HashMap<String, HashMap<String,Comment>> FatherList;
 
-    public void ZCommentsBurn(String fatherID) {
+    public void ZCommentsBurn(String FatherID) {
         this.FatherList = new HashMap<>();
-        this.FatherList.put(fatherID,new HashMap<String,Comment>());
+        this.FatherList.put(FatherID,new HashMap<String,Comment>());
     }
 
-    public HashMap<String,HashMap<String,Comment>> GetFatherList() {
+    public void AddNewFather(String FatherID) {
+        this.FatherList.put(FatherID,new HashMap<String,Comment>());
+    }
+
+
+    public HashMap<String,HashMap<String,Comment>> GetFatherList(){
         return FatherList;
     }
 
-    public HashMap<String, HashMap<String,Comment>> getFatherList() {
+    public HashMap<String, HashMap<String, Comment>> getFatherList() {
         return FatherList;
+    }
+
+    @Override
+    public String toString() {
+        return "ZComments{" +
+                "FatherList=" + FatherList +
+                '}';
     }
 }

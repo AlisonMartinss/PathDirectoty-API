@@ -6,6 +6,8 @@ import PathCarrer.API.DTO.UsersDTO.NoteDTO;
 import PathCarrer.API.DTO.UsersDTO.UpdateProfileName;
 import PathCarrer.API.DTO.UsersDTO.UserEasyAspects;
 import PathCarrer.API.DTO.UsersDTO.userDTO;
+import PathCarrer.API.ExeptionsClasses.NotFound;
+import PathCarrer.API.Model.MyStandardsResponde.GlobalCatch;
 import PathCarrer.API.Service.userProfile.Password;
 import PathCarrer.API.Service.userProfile.UserProfile;
 import org.springframework.beans.factory.annotation.Autowired;

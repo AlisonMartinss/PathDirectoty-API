@@ -7,6 +7,6 @@ package PathCarrer.API.ExeptionsClasses;
  *  **/
 public class InconsistentParameter extends RuntimeException{
     public InconsistentParameter(String ErrorMessage) {
-       super ("Error: " + ErrorMessage);
+       super (ErrorMessage);
     }
 }

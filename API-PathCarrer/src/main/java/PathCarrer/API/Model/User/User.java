@@ -125,6 +125,13 @@ public class User implements UserDetails {
         return notesHashSet;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "worldID='" + worldID + '\'' +
+                ", userName='" + userName + '\'' +
+                '}';
+    }
 
     /* ===== UserDetails ==== */
 
@@ -162,3 +169,5 @@ public class User implements UserDetails {
         return true;
     }
 }
+
+

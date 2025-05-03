@@ -19,6 +19,8 @@ public class Comment {
         this.gen = genComment;
     }
 
+
+
     // ==== Getters & Setters ==== //
 
 
@@ -40,5 +42,16 @@ public class Comment {
 
     public int getGen() {
         return gen;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "fatherID='" + fatherID + '\'' +
+                ", ID='" + ID + '\'' +
+                ", userWordID='" + userWordID + '\'' +
+                ", comment='" + comment + '\'' +
+                ", gen=" + gen +
+                '}';
     }
 }

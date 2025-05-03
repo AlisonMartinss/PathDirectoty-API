@@ -48,6 +48,15 @@ public class interaction {
 
     public void PostComment (InteractionDTO interactionDTO){
 
+        /*System.out.println(
+                "PathID: " + interactionDTO.PathID() + '\'' +
+                "Comment: " + interactionDTO.comment() + '\'' +
+                        "Gen: " + interactionDTO.Gen() + '\'' +
+                        "Father: " + interactionDTO.fatherID() + '\'' +
+                        "indexModule: " + interactionDTO.indexModule()
+
+        );*/
+
         var Path = pathRepository.findPath(interactionDTO.PathID());
         if (Path != null){
             var User = userRepository.findByuserName(interactionDTO.userName());
@@ -61,7 +70,7 @@ public class interaction {
                 }
             }
             else {
-                throw new NotFound("PostComment - Path não encontrado");
+                throw new NotFound("PostComment - User não encontrado");
             }
         }
         else {
@@ -70,6 +79,7 @@ public class interaction {
 
     }
     public void DeleteComment (InteractionDTO interactionDTO){
+
         var Path = pathRepository.findPath(interactionDTO.PathID());
         if (Path != null){
 

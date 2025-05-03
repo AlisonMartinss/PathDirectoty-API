@@ -233,8 +233,6 @@ class AuthorPathTest {
             Authentication authentication = mock(Authentication.class);
 
             mockSecurityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
-            when(securityContext.getAuthentication()).thenReturn(authentication);
-            when(authentication.getPrincipal()).thenReturn(user);
 
             when(userRepository.findByWorldID("user-id")).thenReturn(user);
 

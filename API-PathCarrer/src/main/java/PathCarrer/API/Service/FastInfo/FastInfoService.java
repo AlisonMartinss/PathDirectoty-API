@@ -1,16 +1,15 @@
 package PathCarrer.API.Service.FastInfo;
 
-import PathCarrer.API.DTO.InteractionsDTO.InteractionDTO;
 import PathCarrer.API.Model.ExplorerModels.Explorer;
 import PathCarrer.API.Model.Path.Comments.Comment;
-import PathCarrer.API.Model.Path.Comments.ZComments;
-import PathCarrer.API.Model.Response;
+import PathCarrer.API.Model.MyStandardsResponde.Response;
 import PathCarrer.API.Repository.PathRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+
 /**
  * Classe destinada a conter endpoints que retornam JSON simples, com poucas informações,
  * focados essencialmente em fornecer dados atualizados sobre determinadas entidades.
@@ -46,9 +45,9 @@ public class FastInfoService {
         return pathRepository.BasicInfo(PathID);
     }
 
-    public Response<HashMap<String,Comment>> ElementCommentInfo (String PathID,int indexModule, int Gen, String commentID){
+    public Response<HashMap<String,Comment>> ElementCommentInfo (String PathID, int indexModule, int Gen, String commentID){
         var module = pathRepository.findPath(PathID).getModulos().get(indexModule);
-        return module.ElementCommentInfo(Gen,commentID);
+        return module.ElementCommentInfo(Gen+1,commentID);
     }
 
 }

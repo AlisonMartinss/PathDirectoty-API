@@ -3,11 +3,15 @@ package PathCarrer.API.Configurations.ConfigurationsAll;
 import PathCarrer.API.Configurations.TokenConfig.Token;
 import PathCarrer.API.ExeptionsClasses.GenericErro;
 import PathCarrer.API.Repository.UserRepository;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -25,10 +29,14 @@ public class SecurityFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         var TokenJWT = getToken(request);
         if (TokenJWT != null){
-             var TokenValid =  tokenservice.VerifyToken(TokenJWT);
-             var User = userRepository.findByuserName(TokenValid);
-             var authentication = new UsernamePasswordAuthenticationToken(User,null,User.getAuthorities());
-             SecurityContextHolder.getContext().setAuthentication(authentication);
+            try {
+                var TokenValid =  tokenservice.VerifyToken(TokenJWT);
+                var User = userRepository.findByuserName(TokenValid);
+                var authentication = new UsernamePasswordAuthenticationToken(User,null,User.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }catch (ExpiredJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e) {
+                throw new BadCredentialsException("Token inválido ou expirado", e);
+            }
         }
         filterChain.doFilter(request,response);
     }

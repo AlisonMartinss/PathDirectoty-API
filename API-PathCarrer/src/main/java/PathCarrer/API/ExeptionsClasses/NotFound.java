@@ -7,6 +7,6 @@ package PathCarrer.API.ExeptionsClasses;
  **/
 public class NotFound extends RuntimeException{
     public NotFound(String ErrorMessage) {
-        super ("Error: " + ErrorMessage);
+        super (ErrorMessage);
     }
 }

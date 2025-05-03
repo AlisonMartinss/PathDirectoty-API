@@ -1,7 +1,5 @@
 package PathCarrer.API.Controller;
 
-import PathCarrer.API.DTO.InteractionsDTO.InteractionDTO;
-import PathCarrer.API.Model.Path.Path;
 import PathCarrer.API.Service.FastInfo.FastInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

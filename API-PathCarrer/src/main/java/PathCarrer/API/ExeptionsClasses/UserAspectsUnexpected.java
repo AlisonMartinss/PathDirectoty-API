@@ -6,6 +6,6 @@ package PathCarrer.API.ExeptionsClasses;
  **/
 public class UserAspectsUnexpected extends RuntimeException{
     public UserAspectsUnexpected(String ErrorMessage) {
-        super ("Error: " + ErrorMessage);
+        super (ErrorMessage);
     }
 }

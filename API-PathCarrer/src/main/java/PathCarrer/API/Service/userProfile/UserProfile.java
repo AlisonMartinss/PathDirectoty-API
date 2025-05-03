@@ -9,6 +9,7 @@ import PathCarrer.API.DTO.UsersDTO.NoteDTO;
 import PathCarrer.API.DTO.UsersDTO.UpdateProfileName;
 import PathCarrer.API.DTO.UsersDTO.UserEasyAspects;
 import PathCarrer.API.ExeptionsClasses.*;
+import PathCarrer.API.Model.MyStandardsResponde.Response;
 import PathCarrer.API.Model.User.User;
 import PathCarrer.API.Repository.PathRepository;
 import PathCarrer.API.Repository.UserRepository;
@@ -68,7 +69,7 @@ public class UserProfile {
         }
 
         if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
-            throw new Hackers("Loby - fingindo ser outro");
+            throw new Hackers("fingindo ser outro");
         }
 
         for (String chave : User.getMyPaths().keySet()) {
@@ -96,7 +97,7 @@ public class UserProfile {
             throw new NotFound("AddPath - Path Não Encontrado!");
         }
         if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
-            throw new Hackers("AddPath - fingindo ser outro");
+            throw new Hackers("fingindo ser outro");
         }
 
         path.UpdatePathCount(true);
@@ -121,7 +122,7 @@ public class UserProfile {
             throw new NotFound("RemovePath - Path Não Encontrado!");
         }
         if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
-            throw new Hackers("RemovePath - fingindo ser outro");
+            throw new Hackers("fingindo ser outro");
         }
 
         User.getMyPaths().remove(AddPath.PathID());
@@ -155,11 +156,11 @@ public class UserProfile {
             throw new NotFound("NewName - Usuario não encontrado!");
         }
         if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
-            throw new Hackers("NewName - fingindo ser outro");
+            throw new Hackers("fingindo ser outro");
         }
 
         if (userRepository.findByuserName(userDTO.newUsername()) != null){
-            throw new GenericErro("NewName - Nome de Usuario não disponivel !");
+            throw new GenericErro("nome de usuario nao disponivel");
         }
 
         var CopyUser = User;
@@ -179,7 +180,7 @@ public class UserProfile {
             throw new NotFound("UpdatePictureProfile - Usuario não encontrado!");
         }
         if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
-            throw new Hackers("UpdatePictureProfile - fingindo ser outro");
+            throw new Hackers("fingindo ser outro");
         }
 
         if (UserEasyAspects.PictureProfile() != null && !UserEasyAspects.PictureProfile().trim().isEmpty()){
@@ -202,7 +203,7 @@ public class UserProfile {
             throw new NotFound("UpdateDesc - Usuario não encontrado!");
         }
         if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
-            throw new Hackers("UpdateDesc - fingindo ser outro");
+            throw new Hackers("fingindo ser outro");
         }
 
         if (userEasyAspects.desc() == null || !userEasyAspects.desc().trim().isEmpty()) {
@@ -225,11 +226,11 @@ public class UserProfile {
         }
 
         if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
-            throw new Hackers("NewPassword - fingindo ser outro");
+            throw new Hackers("fingindo ser outro");
         }
 
         if (!(passwordEncoder.matches(password.curretPassword(),User.getPassword()))){
-            throw new InconsistentParameter("InconsistentParameter/NewPassword - currentPassword");
+            throw new InconsistentParameter("As senhas que deveriam ser iguais não são.");
         }
 
         User.setPassword(passwordEncoder.encode(password.newPassWord()));
@@ -241,21 +242,25 @@ public class UserProfile {
         User usuarioLogado = (User) auth.getPrincipal();
 
         var User = userRepository.findByuserName(password.userName());
+
         if (User == null) {
+
             throw new NotFound("DeleteProfile - Usuario não encontrado!");
         }
 
         if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
-            throw new Hackers("DeleteProfile - fingindo ser outro");
+            throw new Hackers("fingindo ser outro");
         }
 
-        if (passwordEncoder.matches(password.curretPassword(),User.getPassword())){
-            var PathByAuthor = pathRepository.findByAuthor(User.getWorldID());
-            if (!PathByAuthor.isEmpty()){
-                pathRepository.deleteAll(PathByAuthor);
-                userRepository.delete(User);
-            }
+        if (!(passwordEncoder.matches(password.curretPassword(),User.getPassword()))){
+            throw new UserAspectsUnexpected("DeleteProfile - Senha incorreta !");
         }
+
+        var PathByAuthor = pathRepository.findByAuthor(User.getWorldID());
+        if (!(PathByAuthor.isEmpty())){
+            pathRepository.deleteAll(PathByAuthor);
+        }
+        userRepository.delete(User);
     }
 
     public void AddSeeClass (AddSeeClassDTO addSeeClassDTO){
@@ -269,7 +274,7 @@ public class UserProfile {
         }
 
         if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
-            throw new Hackers("AddSeeClass - fingindo ser outro");
+            throw new Hackers("fingindo ser outro");
         }
 
         try {
@@ -291,7 +296,7 @@ public class UserProfile {
         }
 
         if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
-            throw new Hackers("RemoveSeeClass - fingindo ser outro");
+            throw new Hackers("fingindo ser outro");
         }
         try {
             User.getMyPaths().get(addSeeClassDTO.PathID()).AddSeeClass(false,addSeeClassDTO.IDclass(),addSeeClassDTO.indexModule());
@@ -313,7 +318,7 @@ public class UserProfile {
         }
 
         if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
-            throw new Hackers("AddNote - fingindo ser outro");
+            throw new Hackers("fingindo ser outro");
         }
 
         if (noteDTO.message() == null || noteDTO.message().trim().isEmpty()){
@@ -336,7 +341,7 @@ public class UserProfile {
         }
 
         if (!usuarioLogado.getWorldID().equals(User.getWorldID())) {
-            throw new Hackers("RemoveNote - fingindo ser outro");
+            throw new Hackers("fingindo ser outro");
         }
 
         try {User.DeleteNote(noteDTO.key());}

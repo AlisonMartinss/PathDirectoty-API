@@ -2,12 +2,10 @@ package PathCarrer.API.Model.Path;
 
 import PathCarrer.API.DTO.CreatePathStep.threePath;
 import PathCarrer.API.Model.Path.Comments.Comment;
-import PathCarrer.API.Model.Path.Comments.ZComments;
-import PathCarrer.API.Model.Response;
+import PathCarrer.API.Model.MyStandardsResponde.Response;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,7 +23,7 @@ public class modulo {
     private String description;
     private List <Aulas> modulocontent;
     private HashSet<String> ClassPresent;
-    private List<ZComments> comments;
+    private HashMap<Integer,HashMap<String,HashMap<String,Comment>>> comments;
     private int qtdAulasModulo;
 
     public void moduloCreate(String name, String  description, List<threePath> modulocontent) {
@@ -41,12 +39,14 @@ public class modulo {
         presentation.ClassCreate("Apresentação",description,null);
         this.modulocontent.add(presentation);
         this.qtdAulasModulo++;
-
         this.qtdAulasModulo = fillSet(modulocontent,this.modulocontent);
-        this.comments = new ArrayList<>();
-        var ForumPostGen = new ZComments();
-        ForumPostGen.ZCommentsBurn("forumPost");
-        this.comments.add(ForumPostGen);
+
+        HashMap<String, HashMap<String,Comment>> innerMap = new HashMap<>();
+        innerMap.put("Forum", new HashMap<>()); // --> Equivalente a father
+
+        this.comments = new HashMap<>();
+        this.comments.put(0,innerMap);
+
     }
 
     private int fillSet(List<threePath> ClassListJSON, List<Aulas> List) {
@@ -80,47 +80,63 @@ public class modulo {
         if (gen == 0){
             var newComment = new Comment();
             newComment.CommentBody(commentCore,"commnetONforum0", UserID, 0);
-            this.comments.get(gen).GetFatherList().get("forumPost").put(newComment.getID(),newComment);
+            this.comments.get(0).get("Forum").put(newComment.getID(),newComment);
         }
         else {
             var newComment = new Comment();
             newComment.CommentBody(commentCore,fatherID,UserID,gen);
             try {
-                this.comments.get(gen).GetFatherList().get(fatherID).put(newComment.getID(),newComment);
+                //System.out.println("PC - Try 1 -GEN !0");
+                this.comments.get(gen).get(fatherID).put(newComment.getID(),newComment);// Parto da premissa que já existe a gen e o father
             }
-            catch (IndexOutOfBoundsException exception) {
-               var newGen = new ZComments();
-               newGen.ZCommentsBurn(fatherID);
-               this.comments.add(newGen);
-               this.comments.get(gen).GetFatherList().get(fatherID).put(newComment.getID(),newComment);
+            catch (NullPointerException exception) {
+                try {
+                //System.out.println("Existe Gen, mas não father!");
+                HashMap<String, List<Comment>> innerMap = new HashMap<>();
+                innerMap.put(fatherID, new ArrayList<>());
+
+                this.comments.get(gen).put(fatherID,new HashMap<>());
+                this.comments.get(gen).get(fatherID).put(newComment.getID(),newComment);
+
+                }catch (NullPointerException exceptionB) {
+                    //System.out.println("N Gen, N father!");
+
+                    HashMap<String, HashMap<String,Comment>> innerMap = new HashMap<>();
+                    innerMap.put(fatherID, new HashMap<>());
+
+                    this.comments.put(this.comments.size(),innerMap);
+                    this.comments.get(gen).get(fatherID).put(newComment.getID(),newComment);
+                }
             }
+
         }
     }
 
-    public  String DeleteComment (int gen,String fatherID,String commentID){
-        if (gen == 0){
-           // this.comments.get(1).GetFatherList().get(commentID).clear();
-            this.comments.get(gen).GetFatherList().get("forumPost").remove(commentID);
+   public  String DeleteComment (int gen,String fatherID,String commentID){
+       if (gen == 0){
+            this.comments.get(0).get("Forum").remove(commentID);
             return "Comentario excluido com Sucesso [POST]";
         }
         else {
             try {
-              //  this.comments.get(gen+1).GetFatherList().get(commentID).clear();
-                this.comments.get(gen).GetFatherList().get(fatherID).remove(commentID);
+
+                this.comments.get(gen).get(fatherID).remove(commentID);
 
                 return "Comentario excluido com Sucesso [!POST]";
             } catch (IndexOutOfBoundsException exception) {
-               return "Erro: Índice inválido no array." ;
+                return "Erro: Índice inválido no array." ;
             }
         }
-    }
+
+   }
 
     public Response<HashMap<String,Comment>> ElementCommentInfo (int gen, String CommentID){
+        //System.out.println("Gen: " + gen + '\'' + " commentID: " + CommentID);
         try {
-         var result = this.comments.get(gen).GetFatherList().get(CommentID);
-         return  new Response<>(result);
+            var result = this.comments.get(gen).get(CommentID);
+            return new Response<>(result);
         }
-        catch (NullPointerException e){
+        catch (NullPointerException | IndexOutOfBoundsException e){
             return  new Response<>("Não existem respostas para esse comentário");
         }
     }
@@ -173,7 +189,11 @@ public class modulo {
         this.modulocontent = modulocontent;
     }
 
-    public List<ZComments> getComments() {
+    public HashSet<String> getClassPresent() {
+        return ClassPresent;
+    }
+
+    public HashMap<Integer, HashMap<String, HashMap<String, Comment>>> getComments() {
         return comments;
     }
 

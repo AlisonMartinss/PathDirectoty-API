@@ -48,6 +48,11 @@ public class ExeptionController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exeption.getMessage());
     }
 
+    @ExceptionHandler(Hackers.class)
+    public ResponseEntity<String> HackersAttack(Hackers exeption) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exeption.getMessage());
+    }
+
     @ExceptionHandler(InconsistentParameter.class)
     public ResponseEntity<String> handleInconsistentParameter(InconsistentParameter exeption) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exeption.getMessage());
@@ -63,7 +68,7 @@ public class ExeptionController {
     }
 
     @ExceptionHandler(PathAspectsUnexpected.class)
-    public ResponseEntity<String> handleUserAspectsUnexpected(PathAspectsUnexpected exeption) {
+    public ResponseEntity<String> handlePathAspectsUnexpected(PathAspectsUnexpected exeption) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(exeption.getMessage());
     }
 

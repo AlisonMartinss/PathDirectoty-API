@@ -7,7 +7,7 @@ package PathCarrer.API.ExeptionsClasses;
  * **/
 public class GenericErro extends RuntimeException{
     public GenericErro(String ErrorMessage) {
-        super ("Error: " + ErrorMessage);
+        super (ErrorMessage);
     }
 
 }

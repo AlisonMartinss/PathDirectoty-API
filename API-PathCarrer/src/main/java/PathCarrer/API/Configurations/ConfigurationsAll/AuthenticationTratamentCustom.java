@@ -1,5 +1,8 @@
 package PathCarrer.API.Configurations.ConfigurationsAll;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,13 +15,23 @@ import java.io.IOException;
 @Component
 public class AuthenticationTratamentCustom implements AuthenticationEntryPoint {
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
-            throws IOException, ServletException {
+    public void commence(HttpServletRequest request,
+                         HttpServletResponse response,
+                         AuthenticationException authException) throws IOException {
 
         response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        String mensagem = "{\"erro\": \"Token inválido ou expirado\"}";
+        Throwable cause = authException.getCause();
+        String mensagem;
+
+        if (cause instanceof ExpiredJwtException || cause instanceof MalformedJwtException || cause instanceof SignatureException ) {
+            mensagem = "{\"erro\": \"Token inválido ou expirado\"}";
+        } else {
+            mensagem = "{\"erro\": \"Token inválido ou expirado\"}";
+        }
+
         response.getWriter().write(mensagem);
     }
 }
