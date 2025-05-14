@@ -143,12 +143,18 @@ public class modulo {
     }
 
     public Comment ElementCommentInfo(int gen, String FatherID, String commentID){
+        System.out.println("Gen: " + gen + '\'' + " FatherID: " + FatherID + '\'' + "commentID " + commentID);
 
         try {
-            return this.comments.get(gen-1).get(FatherID).get(commentID);
+            if (gen == 0){
+                return this.comments.get(0).get("Forum").get(commentID);
+            }
+            else {
+                return this.comments.get(gen).get(FatherID).get(commentID);
+            }
         }
         catch (NullPointerException | IndexOutOfBoundsException e){
-            throw new NotFound("Não existem respostas para esse comentário");
+            throw new NotFound("Erro ao tentar buscar Objeto do comentario em questão");
         }
     }
 

@@ -16,7 +16,7 @@ public class ShortPull {
         return ResponseEntity.ok(fastInfo.PathBasicInfo(PathID));
     }
 
-    @GetMapping("/ElementCommentInfoAnswers")
+    @GetMapping("/ElementCommentInfo")
     public ResponseEntity ElementCommentInfo (@RequestParam String PathID,@RequestParam int indexModule,@RequestParam int Gen, @RequestParam String commentID){
         return ResponseEntity.ok(fastInfo.ElementCommentInfo(PathID,indexModule,Gen,commentID));
     }
