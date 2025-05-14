@@ -3,11 +3,15 @@ package PathCarrer.API.Service.Explorer;
 
 import PathCarrer.API.Model.ExplorerModels.Explorer;
 import PathCarrer.API.Model.Path.Path;
+import PathCarrer.API.Model.User.User;
 import PathCarrer.API.Repository.PathRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Classe destinada a atender demandas de busca por Paths.
@@ -23,6 +27,8 @@ import java.util.List;
  *       Returns all created Paths.</li>
  *   <li><strong>CategoryExplorer:</strong> Retorna Paths filtrados por categoria. <br>
  *       Returns Paths filtered by category.</li>
+ *   <li><strong>MyPathsAuthor:</strong> Retorna os Paths criado pelo autor. <br>
+ *  *    Returns Paths created by author.</li>
  * </ul>
  *
  * <p>
@@ -34,7 +40,6 @@ import java.util.List;
  * </p>
  */
 
-
 @Service
 public class ExplorerService {
     @Autowired
@@ -45,11 +50,17 @@ public class ExplorerService {
     }
 
     public List<Explorer> CategoryExplorer (String category){
+        if (Objects.equals(category, "Todos")){
+            return pathRepository.defautExplorer();
+        }
         return pathRepository.CategoryExplorer(category);
     }
 
-    public List<Path> MyPathsAuthor (String UserName){
-        return pathRepository.findByAuthor(UserName);
+    public List<Path> MyPathsAuthor (){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User usuarioLogado = (User) auth.getPrincipal();
+
+        return pathRepository.findByAuthor(usuarioLogado.getWorldID());
     }
 
 

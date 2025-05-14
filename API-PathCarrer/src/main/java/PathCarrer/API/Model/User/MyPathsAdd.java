@@ -16,7 +16,7 @@ public class MyPathsAdd {
     }
 
     public void AddSeeClass (boolean X,String IDClass, int indexModule){
-        if (X  && indexModule >= 0 && this.moduleSeens.size() - 1 >= indexModule && !this.ClassSee.contains(IDClass)){ // Adicionar aula ; modulo está presente
+        if (X  && indexModule >= 0 && this.moduleSeens.size() - 1 >= indexModule && !this.ClassSee.contains(IDClass)){
 
             this.moduleSeens.get(indexModule).UpdateClassSee(true,IDClass);
             this.ClassSee.add(IDClass);

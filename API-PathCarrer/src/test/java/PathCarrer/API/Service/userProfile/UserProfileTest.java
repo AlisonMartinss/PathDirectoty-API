@@ -15,7 +15,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashMap;
@@ -38,45 +43,81 @@ class UserProfileTest {
 
     @Test
     public void shouldLobyInfo (){
-        User user = mock(User.class);
+
+        var user = mock(User.class);
+        when(user.getWorldID()).thenReturn("id-usuario-autenticado");
+
+        var Path = mock(Path.class);
+
         when(userRepository.findByuserName(user.getUserName())).thenReturn(user);
 
-        var result = userProfile.Loby(user.getUserName());
+        try (MockedStatic<SecurityContextHolder> mockSecurityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+            SecurityContext securityContext = mock(SecurityContext.class);
+            Authentication authentication = mock(Authentication.class);
 
-        assertNotNull(result);
+            mockSecurityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getPrincipal()).thenReturn(user);
+
+            var result = userProfile.Loby(user.getUserName());
+            assertNotNull(result);
+        }
     }
 
     @Test
     public void AddPathOnUserLoby (){
         AddPath MockAddPath = mock(AddPath.class);
+
         User MockUser = mock(User.class);
+        when(MockUser.getWorldID()).thenReturn("id-usuario-autenticado");
         Path MockPath = mock(Path.class);
 
         when(userRepository.findByuserName(MockUser.getUserName())).thenReturn(MockUser);
         when(pathRepository.findPath(MockPath.getId())).thenReturn(MockPath);
 
-        userProfile.AddPath(MockAddPath);
+        try (MockedStatic<SecurityContextHolder> mockSecurityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+            SecurityContext securityContext = mock(SecurityContext.class);
+            Authentication authentication = mock(Authentication.class);
 
-        verify(MockPath).UpdatePathCount(true);
-        verify(MockUser).AddMyPaths(MockPath);
+            mockSecurityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getPrincipal()).thenReturn(MockUser);
 
+            userProfile.AddPath(MockAddPath);
+
+            verify(MockPath).UpdatePathCount(true);
+            verify(MockUser).AddMyPaths(MockPath);
+        }
     }
 
     @Test
     public void RemovePathOnUserLoby (){
         AddPath MockAddPath = mock(AddPath.class);
+
         User MockUser = mock(User.class);
+        when(MockUser.getWorldID()).thenReturn("id-usuario-autenticado");
+
         Path MockPath = mock(Path.class);
+
         HashMap<String, MyPathsAdd> pathsMock = mock(HashMap.class);
 
         when(userRepository.findByuserName(MockUser.getUserName())).thenReturn(MockUser);
         when(pathRepository.findPath(MockPath.getId())).thenReturn(MockPath);
         when(MockUser.getMyPaths()).thenReturn(pathsMock);
 
-        userProfile.RemovePath(MockAddPath);
+        try (MockedStatic<SecurityContextHolder> mockSecurityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+            SecurityContext securityContext = mock(SecurityContext.class);
+            Authentication authentication = mock(Authentication.class);
 
-        verify(MockPath).UpdatePathCount(false);
-        verify(pathsMock).remove(MockPath.getId());
+            mockSecurityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getPrincipal()).thenReturn(MockUser);
+
+            userProfile.RemovePath(MockAddPath);
+
+            verify(MockPath).UpdatePathCount(false);
+            verify(pathsMock).remove(MockPath.getId());
+        }
     }
 
     @Test
@@ -99,62 +140,109 @@ class UserProfileTest {
     public void MakeNewName (){
         UpdateProfileName MockUpdateProfileName = mock(UpdateProfileName.class);
         User UserMock = mock(User.class);
+        when(UserMock.getWorldID()).thenReturn("id-usuario-autenticado");
 
         when(MockUpdateProfileName.userName()).thenReturn("usuarioAntigo");
         when(MockUpdateProfileName.newUsername()).thenReturn("usuarioNovo");
 
-        when(userRepository.findByuserName(MockUpdateProfileName.userName())).thenReturn(UserMock);
-        when(userRepository.findByuserName(MockUpdateProfileName.newUsername())).thenReturn(null);
+        try (MockedStatic<SecurityContextHolder> mockSecurityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+            SecurityContext securityContext = mock(SecurityContext.class);
+            Authentication authentication = mock(Authentication.class);
 
-        userProfile.NewName(MockUpdateProfileName);
+            mockSecurityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getPrincipal()).thenReturn(UserMock);
 
-        verify(userRepository).delete(UserMock);
-        verify(userRepository).save(UserMock);
+            when(userRepository.findByuserName(MockUpdateProfileName.userName())).thenReturn(UserMock);
+            when(userRepository.findByuserName(MockUpdateProfileName.newUsername())).thenReturn(null);
+
+            userProfile.NewName(MockUpdateProfileName);
+
+            verify(userRepository).delete(UserMock);
+            verify(userRepository).save(UserMock);
+        }
     }
 
     @Test
     public void UpdadePicture (){
-        UserEasyAspects UserMockA = mock(UserEasyAspects.class);
-        User UserMockB = mock(User.class);
+        UserEasyAspects UserEasyAspects = mock(UserEasyAspects.class);
 
-        when(userRepository.findByuserName(UserMockA.userName())).thenReturn(UserMockB);
-        userProfile.UpdatePictureProfile(UserMockA);
 
-        verify(userRepository).save(UserMockB);
+        User UserMock = mock(User.class);
+        when(UserMock.getWorldID()).thenReturn("id-usuario-autenticado");
+
+        when(userRepository.findByuserName(UserEasyAspects.userName())).thenReturn(UserMock);
+
+        try (MockedStatic<SecurityContextHolder> mockSecurityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+            SecurityContext securityContext = mock(SecurityContext.class);
+            Authentication authentication = mock(Authentication.class);
+
+            mockSecurityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getPrincipal()).thenReturn(UserMock);
+
+            userProfile.UpdatePictureProfile(UserEasyAspects);
+
+            verify(userRepository).save(UserMock);
+        }
 
     }
 
     @Test
     public void UpdadeDesc (){
-        UserEasyAspects UserMockA = mock(UserEasyAspects.class);
-        User UserMockB = mock(User.class);
+        UserEasyAspects UserEasyAspects = mock(UserEasyAspects.class);
+        when(UserEasyAspects.desc()).thenReturn("desc not null");
 
-        when(userRepository.findByuserName(UserMockA.userName())).thenReturn(UserMockB);
-        when(UserMockA.desc()).thenReturn("Descrição para testar input de Desc.");
+        User UserMock = mock(User.class);
+        when(UserMock.getWorldID()).thenReturn("id-usuario-autenticado");
 
-        userProfile.UpdateDesc(UserMockA);
+        when(userRepository.findByuserName(UserEasyAspects.userName())).thenReturn(UserMock);
+        when(UserEasyAspects.desc()).thenReturn("Descrição para testar input de Desc.");
 
-        verify(UserMockB).setDesc(UserMockA.desc());
+        try (MockedStatic<SecurityContextHolder> mockSecurityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+            SecurityContext securityContext = mock(SecurityContext.class);
+            Authentication authentication = mock(Authentication.class);
+
+            mockSecurityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getPrincipal()).thenReturn(UserMock);
+
+            userProfile.UpdateDesc(UserEasyAspects);
+
+            verify(UserMock).setDesc(UserEasyAspects.desc());
+        }
     }
 
     @Test
     public void NewPassword (){
         Password passwordMock = mock(Password.class);
         User UserMock = mock(User.class);
+        when(UserMock.getWorldID()).thenReturn("id-usuario-autenticado");
 
         when(userRepository.findByuserName(passwordMock.userName())).thenReturn(UserMock);
         when(passwordEncoder.matches(passwordMock.curretPassword(),UserMock.getPassword())).thenReturn(true);
 
-        userProfile.NewPassword(passwordMock);
+        try (MockedStatic<SecurityContextHolder> mockSecurityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+            SecurityContext securityContext = mock(SecurityContext.class);
+            Authentication authentication = mock(Authentication.class);
 
-        verify(UserMock).setPassword(passwordEncoder.encode(passwordMock.newPassWord()));
-        verify(userRepository).save(UserMock);
+            mockSecurityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getPrincipal()).thenReturn(UserMock);
+
+            userProfile.NewPassword(passwordMock);
+
+            verify(UserMock).setPassword(passwordEncoder.encode(passwordMock.newPassWord()));
+            verify(userRepository).save(UserMock);
+        }
     }
 
     @Test
     public void AddSeeClass (){
 
         User UserMock = mock(User.class);
+        when(UserMock.getWorldID()).thenReturn("id-usuario-autenticado");
+
         AddSeeClassDTO SeeClassMock = mock(AddSeeClassDTO.class);
         MyPathsAdd myPathsAddMock = mock(MyPathsAdd.class);
 
@@ -169,16 +257,27 @@ class UserProfileTest {
 
         when(userRepository.findByuserName("joao123")).thenReturn(UserMock);
 
-        userProfile.AddSeeClass(SeeClassMock);
+        try (MockedStatic<SecurityContextHolder> mockSecurityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+            SecurityContext securityContext = mock(SecurityContext.class);
+            Authentication authentication = mock(Authentication.class);
 
-        verify(myPathsAddMock).AddSeeClass(true, "classId123", 0);
-        verify(userRepository).save(UserMock);
+            mockSecurityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getPrincipal()).thenReturn(UserMock);
+
+            userProfile.AddSeeClass(SeeClassMock);
+
+            verify(myPathsAddMock).AddSeeClass(true, "classId123", 0);
+            verify(userRepository).save(UserMock);
+        }
     }
 
     @Test
     public void RemoveSeeClass (){
 
         User UserMock = mock(User.class);
+        when(UserMock.getWorldID()).thenReturn("id-usuario-autenticado");
+
         AddSeeClassDTO SeeClassMock = mock(AddSeeClassDTO.class);
         MyPathsAdd myPathsAddMock = mock(MyPathsAdd.class);
 
@@ -192,11 +291,19 @@ class UserProfileTest {
         when(UserMock.getMyPaths()).thenReturn(myPaths);
 
         when(userRepository.findByuserName("joao123")).thenReturn(UserMock);
+        try (MockedStatic<SecurityContextHolder> mockSecurityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+            SecurityContext securityContext = mock(SecurityContext.class);
+            Authentication authentication = mock(Authentication.class);
 
-        userProfile.RemoveSeeClass(SeeClassMock);
+            mockSecurityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getPrincipal()).thenReturn(UserMock);
 
-        verify(myPathsAddMock).AddSeeClass(false, "classId123", 0);
-        verify(userRepository).save(UserMock);
+            userProfile.RemoveSeeClass(SeeClassMock);
+
+            verify(myPathsAddMock).AddSeeClass(false, "classId123", 0);
+            verify(userRepository).save(UserMock);
+        }
     }
 
 
@@ -204,6 +311,8 @@ class UserProfileTest {
     public void AddNote (){
 
         User UserMock = mock(User.class);
+        when(UserMock.getWorldID()).thenReturn("id-usuario-autenticado");
+
         NoteDTO NoteMock = mock(NoteDTO.class);
 
 
@@ -211,15 +320,26 @@ class UserProfileTest {
         when(NoteMock.UserName()).thenReturn("Sivirino123");
         when(NoteMock.message()).thenReturn("Testes Java. JUnit + Mocks");
 
-        userProfile.AddNote(NoteMock);
+        try (MockedStatic<SecurityContextHolder> mockSecurityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+            SecurityContext securityContext = mock(SecurityContext.class);
+            Authentication authentication = mock(Authentication.class);
 
-        verify(userRepository).save(UserMock);
+            mockSecurityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getPrincipal()).thenReturn(UserMock);
+
+            userProfile.AddNote(NoteMock);
+
+            verify(userRepository).save(UserMock);
+        }
     }
 
     @Test
     public void RemoveNote (){
 
         User UserMock = mock(User.class);
+        when(UserMock.getWorldID()).thenReturn("id-usuario-autenticado");
+
         NoteDTO NoteMock = mock(NoteDTO.class);
 
 
@@ -227,9 +347,18 @@ class UserProfileTest {
         when(NoteMock.UserName()).thenReturn("Sivirino123");
         when(NoteMock.key()).thenReturn("400wio2w");
 
-        userProfile.RemoveNote(NoteMock);
+        try (MockedStatic<SecurityContextHolder> mockSecurityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+            SecurityContext securityContext = mock(SecurityContext.class);
+            Authentication authentication = mock(Authentication.class);
 
-        verify(userRepository).save(UserMock);
+            mockSecurityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getPrincipal()).thenReturn(UserMock);
+
+            userProfile.RemoveNote(NoteMock);
+
+            verify(userRepository).save(UserMock);
+        }
     }
 
 }

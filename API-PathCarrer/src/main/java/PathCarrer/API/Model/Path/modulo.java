@@ -1,6 +1,7 @@
 package PathCarrer.API.Model.Path;
 
 import PathCarrer.API.DTO.CreatePathStep.threePath;
+import PathCarrer.API.ExeptionsClasses.NotFound;
 import PathCarrer.API.Model.Path.Comments.Comment;
 import PathCarrer.API.Model.MyStandardsResponde.Response;
 import lombok.AllArgsConstructor;
@@ -130,7 +131,7 @@ public class modulo {
 
    }
 
-    public Response<HashMap<String,Comment>> ElementCommentInfo (int gen, String CommentID){
+    public Response<HashMap<String,Comment>> ElementCommentInfoAnswers(int gen, String CommentID){
         //System.out.println("Gen: " + gen + '\'' + " commentID: " + CommentID);
         try {
             var result = this.comments.get(gen).get(CommentID);
@@ -138,6 +139,16 @@ public class modulo {
         }
         catch (NullPointerException | IndexOutOfBoundsException e){
             return  new Response<>("Não existem respostas para esse comentário");
+        }
+    }
+
+    public Comment ElementCommentInfo(int gen, String FatherID, String commentID){
+
+        try {
+            return this.comments.get(gen-1).get(FatherID).get(commentID);
+        }
+        catch (NullPointerException | IndexOutOfBoundsException e){
+            throw new NotFound("Não existem respostas para esse comentário");
         }
     }
 

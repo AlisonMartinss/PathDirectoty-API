@@ -40,15 +40,10 @@ public class Path {
 
     private List<String> tags;
 
-    private List<adjectives> adjectivesElements;
-
     private List<modulo> modulos;
 
     private HashSet<String> ClassPresent;
 
-    private List <Comment> comments;
-
-    private List <Comment> forum;
 
 
     public void CreateNewPath(PathDTO JSON,String worldID) {
@@ -58,9 +53,6 @@ public class Path {
         this.description = JSON.onePathDTO().descPathOver();
         this.banner = JSON.onePathDTO().banner();
         this.tags = new ArrayList<>();
-        this.adjectivesElements = new ArrayList<>();
-        this.comments = new ArrayList<>();
-        this.forum = new ArrayList<>();
         this.modulos = new ArrayList<>();
         this.ClassPresent = new HashSet<>();
         this.currentAdd = 0;
@@ -69,10 +61,6 @@ public class Path {
 
         if (!JSON.onePathDTO().tags().isEmpty()){
             fillSetTags(JSON.onePathDTO().tags(), tags);
-        }
-
-        if (!JSON.onePathDTO().adjetives().isEmpty()){
-            fillSetAdjectives(JSON.onePathDTO().adjetives(), adjectivesElements);
         }
 
         if (!JSON.twoPathDTO().ClassList().isEmpty()){
@@ -100,18 +88,6 @@ public class Path {
         }
     }
 
-    private void fillSetAdjectives(List<String> JSON, List<adjectives> List) {
-        for (int i = 0; i < (JSON.size()); i++) {
-            List.add(new adjectives(JSON.get(i)));
-        }
-    }
-
-    private void UpdatefillSetAdjectives(List<String> JSON, List<adjectives> List) {
-        for (int i = 0; i < (JSON.size()); i++) {
-            List.set(i,new adjectives(JSON.get(i)));
-        }
-    }
-
     public void AddNewModulo (ModuloUpdateDTO updateDTO){
         var novo = new modulo();
         novo.moduloCreate(updateDTO.title(),updateDTO.desc(),updateDTO.ClassList());
@@ -127,7 +103,6 @@ public class Path {
         this.description = path.onePathDTO().descPathOver();
         this.banner = path.onePathDTO().banner();
         UpdatefillSetTags(path.onePathDTO().tags(),this.tags);
-        UpdatefillSetAdjectives(path.onePathDTO().adjetives(),this.adjectivesElements);
     }
 
     public void deleteModule (int indexModule){
@@ -182,16 +157,8 @@ public class Path {
         return description;
     }
 
-    public List<adjectives> getAdjectivesElements() {
-        return adjectivesElements;
-    }
-
     public List<modulo> getModulos() {
         return modulos;
-    }
-
-    public List<Comment> getComments() {
-        return this.comments;
     }
 
     public String getIdAuthor() {
@@ -204,5 +171,9 @@ public class Path {
 
     public int getEverAdd() {
         return everAdd;
+    }
+
+    public String getCategory() {
+        return category;
     }
 }

@@ -1,12 +1,15 @@
 package PathCarrer.API.Service.interaction;
 
 import PathCarrer.API.DTO.InteractionsDTO.InteractionDTO;
+import PathCarrer.API.ExeptionsClasses.Hackers;
 import PathCarrer.API.ExeptionsClasses.NotFound;
 import PathCarrer.API.ExeptionsClasses.PathAspectsUnexpected;
-import PathCarrer.API.Model.Path.Comments.Comment;
+import PathCarrer.API.Model.User.User;
 import PathCarrer.API.Repository.PathRepository;
 import PathCarrer.API.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 
@@ -47,30 +50,18 @@ public class interaction {
 
 
     public void PostComment (InteractionDTO interactionDTO){
-
-        /*System.out.println(
-                "PathID: " + interactionDTO.PathID() + '\'' +
-                "Comment: " + interactionDTO.comment() + '\'' +
-                        "Gen: " + interactionDTO.Gen() + '\'' +
-                        "Father: " + interactionDTO.fatherID() + '\'' +
-                        "indexModule: " + interactionDTO.indexModule()
-
-        );*/
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User usuarioLogado = (User) auth.getPrincipal();
 
         var Path = pathRepository.findPath(interactionDTO.PathID());
         if (Path != null){
-            var User = userRepository.findByuserName(interactionDTO.userName());
-            if (User != null){
-                try {
+
+            try {
                     var modulo = Path.getModulos().get(interactionDTO.indexModule());
-                    modulo.postComment(interactionDTO.Gen(),interactionDTO.fatherID(),interactionDTO.comment(),User.getWorldID());
+                    modulo.postComment(interactionDTO.Gen(),interactionDTO.fatherID(),interactionDTO.comment(),usuarioLogado.getWorldID());
                     pathRepository.save(Path);
-                }catch (IndexOutOfBoundsException error){
+            }catch (IndexOutOfBoundsException error){
                     throw new PathAspectsUnexpected("PostComment - Modulo não encontrado " + error);
-                }
-            }
-            else {
-                throw new NotFound("PostComment - User não encontrado");
             }
         }
         else {
@@ -79,12 +70,22 @@ public class interaction {
 
     }
     public void DeleteComment (InteractionDTO interactionDTO){
-
         var Path = pathRepository.findPath(interactionDTO.PathID());
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User usuarioLogado = (User) auth.getPrincipal();
+
+
         if (Path != null){
 
         try {
             var modulo = Path.getModulos().get(interactionDTO.indexModule());
+            var anwerID = modulo.ElementCommentInfo(interactionDTO.Gen(),interactionDTO.fatherID(),interactionDTO.commentID()).getUserWordID();
+
+            if (!usuarioLogado.getWorldID().equals(anwerID)) {
+                throw new Hackers("fingindo ser outro");
+            }
+
             modulo.DeleteComment(interactionDTO.Gen(),interactionDTO.fatherID(),interactionDTO.commentID());
             pathRepository.save(Path);
         }

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Classe destinada a conter endpoints que retornam JSON simples, com poucas informações,
@@ -22,7 +21,7 @@ import java.util.List;
  * <ul>
  *   <li><strong>PathBasicInfo:</strong> Retorna informações básicas sobre um Path. <br>
  *       Returns basic information about a Path.</li>
- *   <li><strong>ElementCommentInfo:</strong> Retorna informações básicas sobre um comentário. <br>
+ *   <li><strong>ElementCommentInfoAnswers:</strong> Retorna informações básicas sobre um comentário. <br>
  *       Returns basic information about a Comment.</li>
  * </ul>
  *
@@ -47,7 +46,7 @@ public class FastInfoService {
 
     public Response<HashMap<String,Comment>> ElementCommentInfo (String PathID, int indexModule, int Gen, String commentID){
         var module = pathRepository.findPath(PathID).getModulos().get(indexModule);
-        return module.ElementCommentInfo(Gen+1,commentID);
+        return module.ElementCommentInfoAnswers(Gen+1,commentID);
     }
 
 }

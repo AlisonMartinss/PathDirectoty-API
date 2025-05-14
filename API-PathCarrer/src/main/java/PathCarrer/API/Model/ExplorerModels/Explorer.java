@@ -1,17 +1,12 @@
 package PathCarrer.API.Model.ExplorerModels;
 
-import PathCarrer.API.Model.Path.Aulas;
-import PathCarrer.API.Model.Path.adjectives;
-import PathCarrer.API.Model.Path.modulo;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import org.apache.logging.log4j.util.Strings;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
-
 import java.util.HashSet;
-import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -22,7 +17,6 @@ public class Explorer {
     private  String category;
     private String banner;
     private  int everAdd;
-    private List<adjectives> adjectivesElements;
     private HashSet<String> ClassPresent;
 
 
@@ -40,11 +34,6 @@ public class Explorer {
 
     public String getCategory() {
         return category;
-    }
-
-
-    public List<adjectives> getAdjectivesElements() {
-        return adjectivesElements;
     }
 
     public HashSet<String> getClassPresent() {

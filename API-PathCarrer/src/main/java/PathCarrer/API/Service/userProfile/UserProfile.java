@@ -206,7 +206,7 @@ public class UserProfile {
             throw new Hackers("fingindo ser outro");
         }
 
-        if (userEasyAspects.desc() == null || !userEasyAspects.desc().trim().isEmpty()) {
+        if (userEasyAspects.desc() == null || userEasyAspects.desc().trim().isEmpty()) {
             throw new InconsistentParameter("InconsistentParameter/UpdateDesc - Desc");
         }
 

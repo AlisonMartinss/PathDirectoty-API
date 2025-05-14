@@ -20,9 +20,8 @@ public class ExplorerController {
     }
 
     @GetMapping("/MyPaths")
-    public ResponseEntity MyPathsAuthor (@RequestParam String UserName){
-        System.out.println("MyPath");
-        return ResponseEntity.ok(explorerService.MyPathsAuthor(UserName));
+    public ResponseEntity MyPathsAuthor (){
+        return ResponseEntity.ok(explorerService.MyPathsAuthor());
     }
 
 }

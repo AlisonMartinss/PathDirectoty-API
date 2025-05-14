@@ -33,10 +33,6 @@ public class User implements UserDetails {
 
     private String Desc;
 
-    private List<insignia> InsigniaON;
-
-    private List<insignia> InsigniaStorage;
-
     private HashMap<String,MyPathsAdd> myPaths;
 
     private List<messages> Messages;
