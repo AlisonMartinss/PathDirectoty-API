@@ -19,7 +19,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-public class ConfigurationAll {
+public class FilterSecurityConfingAndCORS {
     @Autowired
     private SecurityFilter securityFilter;
     @Autowired
