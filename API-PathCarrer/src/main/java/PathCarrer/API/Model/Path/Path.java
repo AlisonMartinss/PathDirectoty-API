@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 
 
-@Document(collection = "Path")
+@Document(collection = "Paths")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

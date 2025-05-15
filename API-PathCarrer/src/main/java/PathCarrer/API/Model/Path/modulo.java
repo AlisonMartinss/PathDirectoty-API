@@ -132,7 +132,7 @@ public class modulo {
    }
 
     public Response<HashMap<String,Comment>> ElementCommentInfoAnswers(int gen, String CommentID){
-        //System.out.println("Gen: " + gen + '\'' + " commentID: " + CommentID);
+
         try {
             var result = this.comments.get(gen).get(CommentID);
             return new Response<>(result);
@@ -143,7 +143,6 @@ public class modulo {
     }
 
     public Comment ElementCommentInfo(int gen, String FatherID, String commentID){
-        System.out.println("Gen: " + gen + '\'' + " FatherID: " + FatherID + '\'' + "commentID " + commentID);
 
         try {
             if (gen == 0){
@@ -156,19 +155,6 @@ public class modulo {
         catch (NullPointerException | IndexOutOfBoundsException e){
             throw new NotFound("Erro ao tentar buscar Objeto do comentario em questão");
         }
-    }
-
-    @Override
-    public String toString() {
-        return "modulo{" +
-                "ID='" + ID + '\'' +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", modulocontent=" + modulocontent +
-                ", ClassPresent=" + ClassPresent +
-                ", comments=" + comments +
-                ", qtdAulasModulo=" + qtdAulasModulo +
-                '}';
     }
 
     //* ===== Getters & Setters ====== *//
