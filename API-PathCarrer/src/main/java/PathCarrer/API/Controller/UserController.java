@@ -10,6 +10,9 @@ import PathCarrer.API.ExeptionsClasses.NotFound;
 import PathCarrer.API.Model.MyStandardsResponde.GlobalCatch;
 import PathCarrer.API.Service.userProfile.Password;
 import PathCarrer.API.Service.userProfile.UserProfile;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/User")
+@Tag(name = "Usuario", description = "Controlador para lidar com ações que são possiveis fazer com um usuario commum.")
 public class UserController {
     @Autowired
     private UserProfile userProfile;
@@ -30,6 +34,8 @@ public class UserController {
 
     @PostMapping("/AddPathID")
     @Transactional
+    @Operation(summary = "Adiciona Path", description = "Salva path para que usuario possa acessa-lo posteriormente no Loby")
+    @ApiResponse(responseCode = "404", description = "Usuario ou path não encontrados")
     public ResponseEntity AddPath (@RequestBody AddPath AddPath){
         userProfile.AddPath(AddPath);
         return ResponseEntity.ok().build();

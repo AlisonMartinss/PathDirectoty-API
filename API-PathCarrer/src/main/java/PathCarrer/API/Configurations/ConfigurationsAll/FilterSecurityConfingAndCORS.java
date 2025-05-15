@@ -1,5 +1,8 @@
 package PathCarrer.API.Configurations.ConfigurationsAll;
 
+
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,11 +22,14 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@SecurityScheme(name = FilterSecurityConfingAndCORS.SECURITY, type = SecuritySchemeType.HTTP, bearerFormat = "JWT", scheme = "bearer")
 public class FilterSecurityConfingAndCORS {
     @Autowired
     private SecurityFilter securityFilter;
     @Autowired
     private AuthenticationTratamentCustom authenticationTratamentCustom;
+
+    public static final String SECURITY = "bearerAuth";
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws
@@ -35,7 +41,12 @@ public class FilterSecurityConfingAndCORS {
                                 sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                         .authorizeHttpRequests(req -> {
                             req.requestMatchers(HttpMethod.POST,"/Login","/Login/NewUser").permitAll();
-                            req.anyRequest().authenticated();
+                            req.requestMatchers(HttpMethod.GET,
+                                            "/Login", "/Login/NewUser",
+                                            "/v3/api-docs/**", "/swagger-ui/**",
+                                            "/swagger-ui.html", "/swagger-resources/**",
+                                            "/webjars/**", "/favicon.ico","/v3/api-docs").permitAll()
+                            .anyRequest().authenticated();
                         })
                         .exceptionHandling(ex -> ex
                                 .authenticationEntryPoint(authenticationTratamentCustom))
