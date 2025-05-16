@@ -35,6 +35,7 @@ public class FilterSecurityConfingAndCORS {
                                 sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                         .authorizeHttpRequests(req -> {
                             req.requestMatchers(HttpMethod.POST,"/Login","/Login/NewUser").permitAll();
+                            req.requestMatchers(HttpMethod.GET,"/CRUD").permitAll();
                             req.anyRequest().authenticated();
                         })
                         .exceptionHandling(ex -> ex
