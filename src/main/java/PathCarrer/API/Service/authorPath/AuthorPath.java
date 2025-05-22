@@ -86,7 +86,7 @@ public class AuthorPath {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User usuarioLogado = (User) auth.getPrincipal();
 
-        Path path = pathRepositoy.findPath(pathDTO.PathID());
+        Path path = pathRepositoy.findPathByID(pathDTO.PathID());
         if (path == null) {
             throw new NotFound("pathUpdate Path nao encontrado");
         }
@@ -108,7 +108,7 @@ public class AuthorPath {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User usuarioLogado = (User) auth.getPrincipal();
 
-        var path = pathRepositoy.findPath(pathDTO.PathID());
+        var path = pathRepositoy.findPathByID(pathDTO.PathID());
 
         if (path == null) {
             throw new NotFound("pathDelete Path nao encontrado");
@@ -132,7 +132,7 @@ public class AuthorPath {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User usuarioLogado = (User) auth.getPrincipal();
 
-        Path pathList = pathRepositoy.findPath(ModuleUpdate.PathID());
+        Path pathList = pathRepositoy.findPathByID(ModuleUpdate.PathID());
 
         if (pathList == null) {
             throw new NotFound("UpadateNewModule Path nao encontrado");
@@ -161,7 +161,7 @@ public class AuthorPath {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User usuarioLogado = (User) auth.getPrincipal();
 
-        Path pathList = pathRepositoy.findPath(pathUpdate.PathID());
+        Path pathList = pathRepositoy.findPathByID(pathUpdate.PathID());
 
         if (pathList == null) {
             throw new PathAspectsUnexpected("UpdateModule Falha ao encontrar modulo em meio ao Path");
@@ -192,7 +192,7 @@ public class AuthorPath {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User usuarioLogado = (User) auth.getPrincipal();
 
-        Path pathList = pathRepositoy.findPath(pathUpdate.PathID());
+        Path pathList = pathRepositoy.findPathByID(pathUpdate.PathID());
 
         if (pathList == null) {
             throw new PathAspectsUnexpected("DeleteModule Falha ao encontrar modulo em meio ao Path");
@@ -220,7 +220,7 @@ public class AuthorPath {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User usuarioLogado = (User) auth.getPrincipal();
 
-        Path Path = pathRepositoy.findPath(classUpdate.PathID());
+        Path Path = pathRepositoy.findPathByID(classUpdate.PathID());
 
         if (Path == null) {
             throw new PathAspectsUnexpected("UpadateNewClass Falha ao encontrar modulo em meio ao Path");
@@ -251,7 +251,7 @@ public class AuthorPath {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User usuarioLogado = (User) auth.getPrincipal();
 
-        Path pathList = pathRepositoy.findPath(classUpdate.PathID());
+        Path pathList = pathRepositoy.findPathByID(classUpdate.PathID());
 
         if (pathList == null) {
             throw new PathAspectsUnexpected("Falha ao encontrar modulo em meio ao Path");
@@ -282,7 +282,7 @@ public class AuthorPath {
          Authentication auth = SecurityContextHolder.getContext().getAuthentication();
          User usuarioLogado = (User) auth.getPrincipal();
 
-         Path pathList = pathRepositoy.findPath(classUpdate.PathID());
+         Path pathList = pathRepositoy.findPathByID(classUpdate.PathID());
 
          if (pathList == null) {
              throw new PathAspectsUnexpected("DeleteClassUnic Falha ao encontrar modulo em meio ao Path");

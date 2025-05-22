@@ -55,12 +55,7 @@ public class LoginController {
     @Transactional
     @PostMapping("/NewUser")
     public ResponseEntity CreateUser (@RequestBody userDTO userDTO){
-        if (loginService.UserNameExist(userDTO.userName())){
-            throw new GenericErro("Um usuario com esse username já existe!");
-        }
-        String crip = passwordEncoder.encode(userDTO.password());
-        userRepository.save(new User(userDTO.userName(),crip));
-
+        loginService.createUser(userDTO);
         return ResponseEntity.ok().build();
     }
 

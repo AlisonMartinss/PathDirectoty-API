@@ -45,7 +45,7 @@ public class FastInfoService {
     }
 
     public Response<HashMap<String,Comment>> ElementCommentInfo (String PathID, int indexModule, int Gen, String commentID){
-        var module = pathRepository.findPath(PathID).getModulos().get(indexModule);
+        var module = pathRepository.findPathByID(PathID).getModulos().get(indexModule);
         return module.ElementCommentInfoAnswers(Gen+1,commentID);
     }
 

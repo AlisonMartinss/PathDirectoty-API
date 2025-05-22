@@ -54,13 +54,13 @@ class FastInfoServiceTest {
 
         List<modulo> modulos = List.of(moduleMock);
         when(pathMock.getModulos()).thenReturn(modulos);
-        when(pathRepository.findPath(pathID)).thenReturn(pathMock);
+        when(pathRepository.findPathByID(pathID)).thenReturn(pathMock);
         when(moduleMock.ElementCommentInfoAnswers(gen + 1, commentID)).thenReturn(responseMock);
 
         Response<HashMap<String, Comment>> result = explorerService.ElementCommentInfo(pathID, indexModule, gen, commentID);
 
         assertEquals(responseMock, result);
-        verify(pathRepository).findPath(pathID);
+        verify(pathRepository).findPathByID(pathID);
         verify(pathMock).getModulos();
         verify(moduleMock).ElementCommentInfoAnswers(gen + 1, commentID);
     }

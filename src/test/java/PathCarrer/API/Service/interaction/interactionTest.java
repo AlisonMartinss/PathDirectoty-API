@@ -48,7 +48,7 @@ class interactionTest {
         when(interactionMock.fatherID()).thenReturn("400w8ioww");
         when(interactionMock.comment()).thenReturn("Teste de comentario");
 
-        when(pathRepository.findPath(interactionMock.PathID())).thenReturn(PathMock);
+        when(pathRepository.findPathByID(interactionMock.PathID())).thenReturn(PathMock);
         when(PathMock.getModulos()).thenReturn(ModuloListMock);
 
         try (MockedStatic<SecurityContextHolder> mockSecurityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
@@ -91,7 +91,7 @@ class interactionTest {
                 when(securityContext.getAuthentication()).thenReturn(authentication);
                 when(authentication.getPrincipal()).thenReturn(user);
 
-            when(pathRepository.findPath(interactionMock.PathID())).thenReturn(PathMock);
+            when(pathRepository.findPathByID(interactionMock.PathID())).thenReturn(PathMock);
             when(PathMock.getModulos()).thenReturn(ModuloListMock);
 
 

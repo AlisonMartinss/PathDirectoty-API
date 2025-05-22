@@ -106,7 +106,7 @@ class AuthorPathTest {
                     List.of("#tag"), "Descrição", "http://link"
             ));
 
-            when(pathRepository.findPath(pathUpdate.PathID())).thenReturn(path);
+            when(pathRepository.findPathByID(pathUpdate.PathID())).thenReturn(path);
             when(userRepository.findByWorldID("id-usuario-autenticado")).thenReturn(user);
 
             authorPath.pathUpdate(pathUpdate);
@@ -133,7 +133,7 @@ class AuthorPathTest {
             when(path.getIdAuthor()).thenReturn("id-usuario-autenticado");
 
             PathUpdate updateDTO = new PathUpdate("path-id", mock(onePath.class));
-            when(pathRepository.findPath(updateDTO.PathID())).thenReturn(path);
+            when(pathRepository.findPathByID(updateDTO.PathID())).thenReturn(path);
             when(userRepository.findByWorldID("id-usuario-autenticado")).thenReturn(user);
 
             authorPath.pathDelete(updateDTO);
@@ -164,7 +164,7 @@ class AuthorPathTest {
             when(dto.title()).thenReturn("novo titulo");
             when(dto.desc()).thenReturn("nova descrição");
 
-            when(pathRepository.findPath("path-id")).thenReturn(path);
+            when(pathRepository.findPathByID("path-id")).thenReturn(path);
             when(userRepository.findByWorldID("user-id")).thenReturn(user);
 
             var moduloMock = mock(modulo.class);
@@ -206,7 +206,7 @@ class AuthorPathTest {
             ClassUpdate dto = new ClassUpdate("path-id", 0, "nome do modulo",0,threePath);
 
             when(userRepository.findByWorldID("user-id")).thenReturn(user);
-            when(pathRepository.findPath("path-id")).thenReturn(path);
+            when(pathRepository.findPathByID("path-id")).thenReturn(path);
 
             modulo moduloMock = mock(modulo.class);
             when(path.getModulos()).thenReturn(List.of(moduloMock));

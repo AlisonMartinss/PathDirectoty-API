@@ -5,7 +5,6 @@ import PathCarrer.API.Model.Path.Path;
 import PathCarrer.API.Model.Path.modulo;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -13,7 +12,7 @@ public interface PathRepository extends MongoRepository<Path,String> {
 
 
     @Query("{ '_id': ?0 }")
-    Path findPath(String id);
+    Path findPathByID(String id);
 
     @Query(value = "{'idAuthor':?0}")
     List<Path> findByAuthor(String Author);

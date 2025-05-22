@@ -73,7 +73,7 @@ class UserProfileTest {
         Path MockPath = mock(Path.class);
 
         when(userRepository.findByuserName(MockUser.getUserName())).thenReturn(MockUser);
-        when(pathRepository.findPath(MockPath.getId())).thenReturn(MockPath);
+        when(pathRepository.findPathByID(MockPath.getId())).thenReturn(MockPath);
 
         try (MockedStatic<SecurityContextHolder> mockSecurityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
             SecurityContext securityContext = mock(SecurityContext.class);
@@ -102,7 +102,7 @@ class UserProfileTest {
         HashMap<String, MyPathsAdd> pathsMock = mock(HashMap.class);
 
         when(userRepository.findByuserName(MockUser.getUserName())).thenReturn(MockUser);
-        when(pathRepository.findPath(MockPath.getId())).thenReturn(MockPath);
+        when(pathRepository.findPathByID(MockPath.getId())).thenReturn(MockPath);
         when(MockUser.getMyPaths()).thenReturn(pathsMock);
 
         try (MockedStatic<SecurityContextHolder> mockSecurityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
@@ -126,7 +126,7 @@ class UserProfileTest {
         User UserMock = mock(User.class);
 
 
-        when(pathRepository.findPath(MockPath.getId())).thenReturn(MockPath);
+        when(pathRepository.findPathByID(MockPath.getId())).thenReturn(MockPath);
         when(MockPath.getIdAuthor()).thenReturn("Sivirino");
         when(userRepository.findByWorldID(MockPath.getIdAuthor())).thenReturn(UserMock);
 

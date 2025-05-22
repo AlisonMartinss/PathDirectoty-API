@@ -9,7 +9,6 @@ import PathCarrer.API.DTO.UsersDTO.NoteDTO;
 import PathCarrer.API.DTO.UsersDTO.UpdateProfileName;
 import PathCarrer.API.DTO.UsersDTO.UserEasyAspects;
 import PathCarrer.API.ExeptionsClasses.*;
-import PathCarrer.API.Model.MyStandardsResponde.Response;
 import PathCarrer.API.Model.User.User;
 import PathCarrer.API.Repository.PathRepository;
 import PathCarrer.API.Repository.UserRepository;
@@ -73,7 +72,7 @@ public class UserProfile {
         }
 
         for (String chave : User.getMyPaths().keySet()) {
-          if (pathRepository.findPath(chave) == null){
+          if (pathRepository.findPathByID(chave) == null){
           User.getMyPaths().remove(chave);
           }
         }
@@ -92,7 +91,7 @@ public class UserProfile {
             throw new NotFound("AddPath - Usuario não encontrado!");
         }
 
-        var path = pathRepository.findPath(AddPath.PathID());
+        var path = pathRepository.findPathByID(AddPath.PathID());
         if (path == null) {
             throw new NotFound("AddPath - Path Não Encontrado!");
         }
@@ -116,7 +115,7 @@ public class UserProfile {
             throw new NotFound("RemovePath - Usuario não encontrado!");
         }
 
-        var path = pathRepository.findPath(AddPath.PathID());
+        var path = pathRepository.findPathByID(AddPath.PathID());
 
         if (path == null) {
             throw new NotFound("RemovePath - Path Não Encontrado!");
@@ -133,7 +132,7 @@ public class UserProfile {
     }
 
     public PathGetDTO GetPath (String pathID){
-        var Path = pathRepository.findPath(pathID);
+        var Path = pathRepository.findPathByID(pathID);
         if (Path == null) {
             throw new NotFound("GetPath - Path Não Encontrado!");
         }

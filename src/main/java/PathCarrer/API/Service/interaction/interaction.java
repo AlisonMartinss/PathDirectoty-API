@@ -53,7 +53,7 @@ public class interaction {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User usuarioLogado = (User) auth.getPrincipal();
 
-        var Path = pathRepository.findPath(interactionDTO.PathID());
+        var Path = pathRepository.findPathByID(interactionDTO.PathID());
         if (Path != null){
 
             try {
@@ -70,7 +70,7 @@ public class interaction {
 
     }
     public void DeleteComment (InteractionDTO interactionDTO){
-        var Path = pathRepository.findPath(interactionDTO.PathID());
+        var Path = pathRepository.findPathByID(interactionDTO.PathID());
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User usuarioLogado = (User) auth.getPrincipal();
