@@ -15,12 +15,12 @@ public class ExplorerController {
         return ResponseEntity.ok(explorerService.DefaultExplorer());
     }
     @GetMapping("/CategoryExplorer")
-    public ResponseEntity CategoryExplorer (@RequestParam String category){
+    public ResponseEntity CategoryExplorer (@RequestParam String category) throws InterruptedException {
         return ResponseEntity.ok(explorerService.CategoryExplorer(category));
     }
 
     @GetMapping("/MyPaths")
-    public ResponseEntity MyPathsAuthor (){
+    public ResponseEntity MyPathsAuthor () throws InterruptedException {
         return ResponseEntity.ok(explorerService.MyPathsAuthor());
     }
 

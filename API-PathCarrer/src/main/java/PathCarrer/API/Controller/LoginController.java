@@ -35,9 +35,7 @@ public class LoginController {
     private LoginService loginService;
     @Transactional
     @PostMapping
-    public ResponseEntity login (@RequestBody userDTO userDTO){
-
-
+    public ResponseEntity login (@RequestBody userDTO userDTO) {
         try {
             if (!loginService.UserNameExist(userDTO.userName())){
                 throw new GenericErro("Usuario inexistente!");
