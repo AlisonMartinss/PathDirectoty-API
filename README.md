@@ -15,7 +15,15 @@ A plataforma Path to Career permite aos usuários criar e acessar estruturas cha
 #### Utilizando alguns dos recursos  da platafroma:
 [Assista ao vídeo](https://www.youtube.com/watch?v=y9Uz3luEqzQ)
 
+##🔧 Tecnologias
+- Java 17
+- SpringBott v-3.4
+- SpringSecurity v-3.4
+- MongoDB
 
 ## 🏗️ Arquitetura
 - Arquitetura usada no sistema: REST.
 - Autenticação: JWT + OAuth + CORS e etc, implementações usando Spring Security.
+
+## 🗂️ Estrutura
+-
