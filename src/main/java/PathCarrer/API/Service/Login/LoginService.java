@@ -43,7 +43,6 @@ public class LoginService {
             userRepository.save((user));
         }
         else {
-            System.out.println(PathIdDefaultForNewUsers);
             user.AddMyPaths(pathRepository.findPathByID(PathIdDefaultForNewUsers));
             userRepository.save((user));
         }
