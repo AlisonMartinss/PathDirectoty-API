@@ -39,23 +39,23 @@ Uma vez que você estiver no diretorio "API-PathCarrer/src/main/java/PathCarrer"
    - /Token: Geração e verificação do Token.
      
 #### /Controller
- - Controllers da aplicação
+ - Controllers da aplicação.
 
 #### /ControllerAdvice
  - /ExceptionController: Padronização de retorno para determinadas categorias de expcetions.
 
 #### /DTO
- - DTO's
+ - DTO's.
    
 #### /ExceptionsClasses
 - Classes de exceptions personalizadas.
 
 #### /Models
-- Models
+- Models.
   
 #### /Repository
-- Repositorys
+- Repositorys.
 
 #### /Service
-- Services
+- Services.
 
