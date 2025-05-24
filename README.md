@@ -46,7 +46,7 @@ Uma vez que você estiver no diretorio "API-PathCarrer/src/main/java/PathCarrer"
 
 #### /DTO
  - DTO's
- - 
+   
 #### /ExceptionsClasses
 - Classes de exceptions personalizadas.
 
