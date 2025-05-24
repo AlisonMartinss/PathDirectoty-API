@@ -35,7 +35,27 @@ Uma vez que você estiver no diretorio "API-PathCarrer/src/main/java/PathCarrer"
    - /FilterSecurityConfigAndCORS: Configurações do filtro de segurança e CORS.
    - /SecurityFulterToToken: Filtro de confg token.
    - /SwwagerConfig: Configurações do Swagger.
- - /GlobalExeptions
-   - /GlobalExeptionsHandler: Padronização de retorno para determinadas categorias de expcetions.
  - /TokenConfig
-   - /Token: Padronização de retorno para determinadas categorias de expcetions.
+   - /Token: Geração e verificação do Token.
+     
+#### /Controller
+ - Controllers da aplicação
+
+#### /ControllerAdvice
+ - /ExceptionController: Padronização de retorno para determinadas categorias de expcetions.
+
+#### /DTO
+ - DTO's
+ - 
+#### /ExceptionsClasses
+- Classes de exceptions personalizadas.
+
+#### /Models
+- Models
+  
+#### /Repository
+- Repositorys
+
+#### /Service
+- Services
+
