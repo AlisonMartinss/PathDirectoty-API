@@ -29,7 +29,7 @@ A plataforma Path to Career permite aos usuários criar e acessar estruturas cha
 ## 🗂️ Estrutura
 Uma vez que você estiver no diretorio "API-PathCarrer/src/main/java/PathCarrer" vamos ver as delegações de responsabilidades seguindo um os principios SOLID
 
-####/Configurations
+#### /Configurations
  - /ConfigurationsAll
   - /AuthenticationTratamentCuston: Tratamento de exceptions lançados pela authenticação Authenticação.
   - /FilterSecurityConfigAndCORS: Configurações do filtro de segurança e CORS.
