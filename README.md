@@ -31,7 +31,7 @@ Uma vez que você estiver no diretorio "API-PathCarrer/src/main/java/PathCarrer"
 
 #### /Configurations
  - /ConfigurationsAll
-  - /AuthenticationTratamentCuston: Tratamento de exceptions lançados pela authenticação Authenticação.
-  - /FilterSecurityConfigAndCORS: Configurações do filtro de segurança e CORS.
-  - /SecurityFulterToToken: Filtro de confg token.
-  - /SwwagerConfig: Configurações do Swagger.
+   - /AuthenticationTratamentCuston: Tratamento de exceptions lançados pela authenticação Authenticação.
+   - /FilterSecurityConfigAndCORS: Configurações do filtro de segurança e CORS.
+   - /SecurityFulterToToken: Filtro de confg token.
+   - /SwwagerConfig: Configurações do Swagger.
