@@ -30,7 +30,7 @@ public class LoginService {
         else {return true;}
     }
 
-    public void createUser (userDTO userDTO){
+    public String createUser (userDTO userDTO){
         if (UserNameExist(userDTO.userName())){
             throw new GenericErro("Um usuario com esse username já existe!");
         }
@@ -46,6 +46,8 @@ public class LoginService {
             user.AddMyPaths(pathRepository.findPathByID(PathIdDefaultForNewUsers));
             userRepository.save((user));
         }
+
+        return "Usuario criado com sucesso";
     }
 
 

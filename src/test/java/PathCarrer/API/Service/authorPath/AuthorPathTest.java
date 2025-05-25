@@ -78,7 +78,7 @@ class AuthorPathTest {
 
         when(pathRepository.save(Mockito.any(Path.class))).thenReturn(pathMock);
 
-        Path result = authorPath.PathCreate(pathDTOMock);
+        String result = authorPath.PathCreate(pathDTOMock);
 
         assertNotNull(result);
         Mockito.verify(userRepository).findByuserName("Sivirino");

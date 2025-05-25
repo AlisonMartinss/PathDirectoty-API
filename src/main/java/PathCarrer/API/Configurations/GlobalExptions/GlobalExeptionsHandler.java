@@ -29,7 +29,7 @@ public class GlobalExeptionsHandler {
     }
 
     @ExceptionHandler(GenericErro.class)
-    public ResponseEntity<?> handleMyGeneric(GenericErro ex) {
+    public static ResponseEntity<?> handleMyGeneric(GenericErro ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Map.of("erro", ex.getMessage()));
     }

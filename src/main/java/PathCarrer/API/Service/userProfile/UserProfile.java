@@ -132,12 +132,13 @@ public class UserProfile {
     }
 
     public PathGetDTO GetPath (String pathID){
-        var Path = pathRepository.findPathByID(pathID);
+        var Path = pathRepository.findPathByIDtoContentAcessUtility(pathID);
         if (Path == null) {
             throw new NotFound("GetPath - Path Não Encontrado!");
         }
 
         var Author = userRepository.findByWorldID(Path.getIdAuthor().toString());
+
         if (Author == null) {
             throw new NotFound("GetPath - Author não encontrado!");
         }

@@ -1,5 +1,9 @@
 package PathCarrer.API.Configurations.ConfigurationsAll;
 
+import com.auth0.jwt.JWT;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import org.apache.catalina.security.SecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +24,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@SecurityScheme(name = FilterSecurityConfingAndCORS.SECURITY, type = SecuritySchemeType.HTTP, bearerFormat = "JWT",scheme = "bearer")
 public class FilterSecurityConfingAndCORS {
     @Autowired
     private SecurityFilter securityFilter;
@@ -27,6 +32,7 @@ public class FilterSecurityConfingAndCORS {
     private AuthenticationTratamentCustom authenticationTratamentCustom;
     @Value("${cors.client}")
     private String CorsClient;
+    public static final String SECURITY = "bearerAuth";
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws
@@ -39,6 +45,7 @@ public class FilterSecurityConfingAndCORS {
                         .authorizeHttpRequests(req -> {
                             req.requestMatchers(HttpMethod.POST,"/Login","/Login/NewUser").permitAll();
                             req.requestMatchers(HttpMethod.GET,"/CRUD").permitAll();
+                            req.requestMatchers("/v3/api-docs/**", "swagger-ui/**","swagger-ui.html").permitAll();
                             req.anyRequest().authenticated();
                         })
                         .exceptionHandling(ex -> ex
