@@ -45,7 +45,7 @@ public class FilterSecurityConfingAndCORS {
                         .authorizeHttpRequests(req -> {
                             req.requestMatchers(HttpMethod.POST,"/Login","/Login/NewUser").permitAll();
                             req.requestMatchers(HttpMethod.GET,"/CRUD").permitAll();
-                            req.requestMatchers("/v3/api-docs/**", "swagger-ui/**","swagger-ui.html").permitAll();
+                            req.requestMatchers("/v3/api-docs/**", "swagger-ui/**","swagger-ui.html","/actuator/prometheus").permitAll();
                             req.anyRequest().authenticated();
                         })
                         .exceptionHandling(ex -> ex
